@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import M from 'materialize-css';
+import 'materialize-css/dist/css/materialize.min.css'
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

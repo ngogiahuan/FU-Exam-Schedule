@@ -1,34 +1,110 @@
 .login-w-google {
+    width: 180px;
     display: flex;
     justify-content: center;
     align-items: center;
     border: #333 1px solid;
-    border-radius: 5px;
-    padding: 5px;
-    margin: 5px;
+    border-radius: 8px;
+    height: 30px;
     background-color: #fff;
     color: #333;
     cursor: pointer;
-
+    padding: 4px;
 }
 
+.google-icon {
+    position: relative;
+    width: 36px;
+    padding: 2px;
+}
+
+.google-icon svg {
+    width: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.google-title {
+    position: relative;
+    width: 100%;
+}
+
+.google-title p {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -53%);
+}
+
+
+
 .login-w-google p {
+    display: flex;
     margin: 0;
-    padding: 0;
-    margin-left: 5px;
+    padding: 8px;
 }
 
 .profile {
-    border: #333 1px solid;
     display: flex;
     gap: 10px;
     height: 60px;
     justify-content: center;
     align-items: center;
+    position: relative;
+}
+
+.profile-img {
+    position: relative;
+    width: 50px;
 }
 
 .profile-img img {
-    width: 50px;
+    width: 32px;
     object-fit: cover;
     border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+
+.profile-info {
+    position: absolute;
+    min-width: 250px; /* Set width of the dropdown */
+    background: #fff;
+    box-shadow:  0px 6px 8px 3px #d9d9d9;
+    display: none;
+    z-index: 999;
+    right: 0;
+    top: 100%;
+    padding: 0 8px;
+    margin: 0;
+    list-style: none;
+    border-radius: 8px;
+}
+
+.profile-item {
+    display: flex;
+    position: relative;
+}
+
+
+
+
+.profile-info li {
+    margin: 16px 0 0 0;
+}
+
+.profile-info li:last-child {
+    margin: 16px 0 16px 0;
+}
+
+.profile-info li i {
+    margin-right: 8px;
 }
