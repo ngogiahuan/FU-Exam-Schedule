@@ -1,10 +1,24 @@
 .navbar-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     height: 62px;
     background-color: #fff;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
 
+.navbar-element {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.navbar-logo {
+    height: 50px;
+}
+
+.logo-text {
+    height: 30px;
 }
