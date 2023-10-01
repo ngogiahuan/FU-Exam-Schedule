@@ -10,21 +10,12 @@
     color: #333;
     cursor: pointer;
     padding: 4px;
-    user-select: none;
-}
-
-.login-w-google:hover {
-    background-color: #f1f1f1;
-}
-
-.login-w-google:active {
-    background-color: #e1e1e1;
 }
 
 .google-icon {
     position: relative;
     width: 36px;
-    padding: 2px;
+    margin-left: 8px;
 }
 
 .google-icon svg {
