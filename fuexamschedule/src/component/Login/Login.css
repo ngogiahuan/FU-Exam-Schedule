@@ -1,5 +1,5 @@
 .login-w-google {
-    width: 180px;
+    width: 182px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,6 +10,14 @@
     color: #333;
     cursor: pointer;
     padding: 4px;
+}
+
+.login-w-google:hover {
+    background-color: #eee;
+}
+
+.login-w-google:active {
+    background-color: #ddd;
 }
 
 .google-icon {
