@@ -3,17 +3,15 @@ import Login from '../Login/Login'
 import './Navbar.css'
 
 export default function Navbar() {
+    const userProfile = JSON.parse(localStorage.getItem('userProfile'));
     return (
         <div className="navbar-container">
             <div className="navbar-element">
-                <div className='navbar-logo'>
-                    <img src="../assets/images/logo/logo-noBG.png" alt="" />
-                </div>
+                <img src="./logo/logo-no-text-nobg.png" alt="logo" className='navbar-logo' />
+                <img src="./logo/logo-text.png" alt="logo text" className='logo-text' />
+            </div>
 
-                <div className="navbar-title">
-                    Exam Schedules
-                </div>
-
+            <div className="navbar-element">
                 <Login />
             </div>
         </div>

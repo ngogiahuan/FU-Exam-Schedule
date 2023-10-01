@@ -1,28 +1,24 @@
-.navbar-element {
+.navbar-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0 20px;
     height: 62px;
     background-color: #fff;
-    width: 90%;
-    margin: 0 auto;
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
 }
 
+.navbar-element {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
 
 .navbar-logo {
-    width: 80px;
+    height: 50px;
 }
 
-.navbar-logo img {
-    width: 100%;
-}
-
-.navbar-title {
-    font-size: 35px;
-    font-weight: bold;
-    letter-spacing: 3px;
-    color: #2866cb;
+.logo-text {
+    height: 30px;
 }
