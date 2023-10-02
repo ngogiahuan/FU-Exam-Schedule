@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './component/Navbar/Navbar';
 import Welcome from './component/Welcome/Welcome';
 import Student from './component/Student/Student';
+import CalendarTest from './component/TestComponent/CalendarTest';
 
 function App() {
   const userProfile = JSON.parse(sessionStorage.getItem('userProfile'));
@@ -10,9 +11,9 @@ function App() {
   return (
     <>
       <Navbar />
-      <Routes>
+      {/* <Routes>
         <Route path='/' element={userProfile ? <Student /> : <Welcome />} />
-      </Routes>
+      </Routes> */}
     </>
   );
 }
