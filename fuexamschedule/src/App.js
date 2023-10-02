@@ -11,9 +11,9 @@ function App() {
   return (
     <>
       <Navbar />
-      {/* <Routes>
+      <Routes>
         <Route path='/' element={userProfile ? <Student /> : <Welcome />} />
-      </Routes> */}
+      </Routes>
     </>
   );
 }
