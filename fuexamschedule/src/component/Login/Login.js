@@ -3,10 +3,12 @@ import { googleLogout, useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import './Login.css';
 import Button from '@mui/material/Button';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
+    const navigate = useNavigate();
 
     // Check for user in Session Storage on component initialization
     useEffect(() => {
@@ -36,6 +38,7 @@ export default function Login() {
                     setProfile(res.data);
                     sessionStorage.setItem('userProfile', JSON.stringify(res.data));
                     console.log(res.data);
+                    navigate('/student');
                 })
                 .catch((err) => {
                     console.log(err);
@@ -54,6 +57,7 @@ export default function Login() {
         googleLogout();
         setProfile(null);
         sessionStorage.removeItem('userProfile'); // Remove user from Session Storage
+        navigate('/');
     };
 
     return (
