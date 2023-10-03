@@ -8,12 +8,10 @@ export default function Welcome() {
                 <div className="card-element">
                     <div className="welcome-line">
                         <h1 className="animate-charcter">Welcome</h1>
-                        <h2>to <span className="animate-charcter">FU Exam Schedule</span></h2>
+                        <h2><span className="animate-charcter">to FU Exam Schedule</span></h2>
                     </div>
                     <div className="details-line">
-                        <p>
-                            To use this portal, you need to login with your Google account.
-                        </p>
+                        <p>To use this portal, you need to login with your Google account.</p>
                         <p>Click on the login button on the top right corner to login.</p>
                     </div>
                 </div>
