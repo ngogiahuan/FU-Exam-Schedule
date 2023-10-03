@@ -1,78 +1,91 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 .welcome-conatiner {
+    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: calc(100vh - 80px);
+    width: 100%;
+    height: 100vh;
 }
 
-.typing.animate {
-    width: 21ch;
-    border-right: 0.1em solid black;
-    font-family: monospace;
-    font-size: 2em;
-    animation: type 2.5s steps(20), writer 1s infinite alternate, delete 0.5s steps(5) 2.5s, type2 1s steps(4) 3s forwards, type3 3s steps(22, end) 6s forwards;
-    overflow: hidden;
-    white-space: nowrap;
-    cursor: pointer;
+.welcome-card {
+    background-color: #fff;
+    user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.typing.animate::before {
-    content: "Hello, We're FU Exam";
-    animation: type2 1s steps(4) 3s forwards, type3 3s steps(22, end) 6s forwards;
+.card-element {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
-@keyframes type {
-    from {
-        width: 0;
-    }
+.welcome-line {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+    -webkit-box-reflect: below -10px linear-gradient(transparent, rgba(0, 0, 0, .1));
+}
 
+.welcome-line h1 {
+    font-size: 6.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0px;
+    padding: 0px;
+    /* make all upercase */
+    text-transform: uppercase;
+    /* prevent user to copy */
+    user-select: none;
+    /* add leter spacing 2px */
+    letter-spacing: 8px;
+}
+
+.welcome-line h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000;
+    margin: 0px;
+    padding: 0px;
+    /* make all upercase */
+    text-transform: uppercase;
+    /* prevent user to copy */
+    user-select: none;
+}
+
+.welcome-line h2 span {
+    color: #2866cb;
+}
+
+.details-line p {
+    font-size: 14px;
+    font-weight: 400;
+    color: #333;
+}
+
+.animate-charcter {
+    text-transform: uppercase;
+    background-image: linear-gradient(-225deg,
+            #231557 0%,
+            #44107a 29%,
+            #ff1361 67%,
+            #fff800 100%);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #fff;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2s linear infinite;
+}
+
+@keyframes textclip {
     to {
-        width: 21ch;
-    }
-}
-
-@keyframes type2 {
-    from {
-        width: 16ch;
-        content: "Hello, We're FU Exam. "
-    }
-
-    to {
-        width: 20ch;
-        content: "Hello, We're FU Exam. "
-    }
-}
-
-@keyframes type3 {
-    from {
-        width: 20ch;
-        content: "Hello, We're FU Exam. Welcome to our Website!"
-    }
-
-    to {
-        width: 45ch;
-        content: "Hello, We're FU Exam. Welcome to our Website!"
-    }
-}
-
-@keyframes writer {
-    50% {
-        border-color: transparent;
-    }
-}
-
-@keyframes delete {
-    from {
-        width: 21ch;
-    }
-
-    to {
-        width: 16ch;
+        background-position: 200% center;
     }
 }

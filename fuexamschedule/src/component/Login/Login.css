@@ -9,7 +9,6 @@
     background-color: #fff;
     color: #333;
     cursor: pointer;
-    padding: 4px;
 }
 
 .login-w-google:hover {
@@ -50,6 +49,8 @@
     transform: translate(-50%, -53%);
     font-size: 14px;
     letter-spacing: 1px;
+    padding: 0;
+    margin: 0;
 }
 
 .profile {
@@ -101,9 +102,6 @@
     display: flex;
     position: relative;
 }
-
-
-
 
 .profile-info li {
     margin: 16px 0 0 0;
