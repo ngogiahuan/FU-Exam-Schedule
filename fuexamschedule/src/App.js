@@ -3,6 +3,7 @@ import './App.css';
 import Navbar from './component/Navbar/Navbar';
 import Welcome from './component/Welcome/Welcome';
 import Student from './component/Student/Student';
+import StuExamCard from './component/TestComponent/StuExamCard';
 
 function App() {
   const userProfile = JSON.parse(sessionStorage.getItem('userProfile'));
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path='/' element={userProfile ? <Student /> : <Welcome />} />
       </Routes>
+      <StuExamCard />
     </>
   );
 }
