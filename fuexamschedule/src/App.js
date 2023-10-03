@@ -9,14 +9,14 @@ function App() {
   const userProfile = JSON.parse(sessionStorage.getItem('userProfile'));
 
   return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path='/' element={<Welcome />} />
-        <Route path='/student' element={<Student />} />
-      </Routes>
-      <Footer />
-    </>
+      <div className="main-content">
+        <Navbar />
+          <Routes>
+            <Route path='/' element={<Welcome />} />
+            <Route path='/student' element={<Student />} />
+          </Routes>
+        <Footer />
+      </div>  
   );
 }
 

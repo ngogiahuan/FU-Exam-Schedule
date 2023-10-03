@@ -3,11 +3,15 @@ footer {
     color: #333;
     text-align: center;
     margin-bottom: 6px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
 
 .line {
     width: 50%;
     background-color: #ccc;
     height: 1px;
-    margin: auto;
+    margin: auto;   
 }
