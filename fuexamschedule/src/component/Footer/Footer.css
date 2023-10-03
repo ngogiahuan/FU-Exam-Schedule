@@ -1,0 +1,13 @@
+footer {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.line {
+    width: 50%;
+    background-color: #ccc;
+    height: 1px;
+    margin: auto;
+}

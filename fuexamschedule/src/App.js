@@ -3,7 +3,7 @@ import './App.css';
 import Navbar from './component/Navbar/Navbar';
 import Welcome from './component/Welcome/Welcome';
 import Student from './component/Student/Student';
-import StuExamCard from './component/TestComponent/StuExamCard';
+import Footer from './component/Footer/Footer';
 
 function App() {
   const userProfile = JSON.parse(sessionStorage.getItem('userProfile'));
@@ -15,7 +15,7 @@ function App() {
         <Route path='/' element={<Welcome />} />
         <Route path='/student' element={<Student />} />
       </Routes>
-      <StuExamCard />
+      <Footer />
     </>
   );
 }
