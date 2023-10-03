@@ -1,3 +1,5 @@
 .student {
     padding-top: 80px;
+    display: grid;
+    grid-template: 100% / 30% 70%;
 }
