@@ -42,7 +42,7 @@
     /* prevent user to copy */
     user-select: none;
     /* add leter spacing 8px */
-    letter-spacing: 8px;
+    letter-spacing: 16px;
 }
 
 .welcome-line h2 {
