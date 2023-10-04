@@ -24,7 +24,7 @@ export default function StuExamCard() {
     return (
       <div className="container">
         {ListOfStuExam.map((stuExam, index) => (
-          <Card
+          <Card className='card'
             key={index}
             sx={{
               width: '29%',
@@ -43,20 +43,20 @@ export default function StuExamCard() {
               <Typography sx={{ mb: 1.5 }} color="text.primary">
                 <table border="0" cellspacing="5">
                   <tr>
-                    <td>Room</td>
-                    <td style={{ paddingLeft: 8 }}>{stuExam.room}</td>
+                    <td className='td-title'>Room</td>
+                    <td className='td-data'><span>:</span>{stuExam.room}</td>
                   </tr>
                   <tr>
-                    <td>Time</td>
-                    <td style={{ paddingLeft: 8 }}>{stuExam.time}</td>
+                    <td className='td-title'>Time</td>
+                    <td className='td-data'><span>:</span>{stuExam.time}</td>
                   </tr>
                   <tr>
-                    <td>Type</td>
-                    <td style={{ paddingLeft: 8 }}>{stuExam.type}</td>
+                    <td className='td-title'>Type</td>
+                    <td className='td-data'><span>:</span>{stuExam.type}</td>
                   </tr>
                   <tr style={{ fontWeight: 'bold'}}>
-                    <td>Note</td>
-                    <td style={{ paddingLeft: 8 }}>{stuExam.note}</td>
+                    <td className='td-title'>Note</td>
+                    <td className='td-data'><span>:</span>{stuExam.note}</td>
                   </tr>
                 </table>
               </Typography>
