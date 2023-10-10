@@ -1,7 +1,14 @@
 import React from "react";
 import "./Student.css";
-import Examiner from "../Examiner/Examiner";
+import Sidebar from "../SideBar/SideBar";
+import StuExamCard from "../StudentCard/StuExamCard";
+
+const studentFeatures = ["View Exam Slot"];
 
 export default function Student() {
-  return <></>;
+  return (
+    <>
+      <Sidebar features={studentFeatures} content={<StuExamCard />} />
+    </>
+  );
 }
