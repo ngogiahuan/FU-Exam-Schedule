@@ -70,6 +70,7 @@ export default function Login() {
     closeProfileInfo();
     setUser(null);
     sessionStorage.removeItem("userProfile");
+    setProfile(null);
     navigate("/");
   };
 
