@@ -4,21 +4,18 @@ import Navbar from "./component/Navbar/Navbar";
 import Welcome from "./component/Welcome/Welcome";
 import Student from "./component/Student/Student";
 import Footer from "./component/Footer/Footer";
-import AdminSidebar from "./component/SideBar/AdminSidebar";
 
 function App() {
   const userProfile = JSON.parse(sessionStorage.getItem("userProfile"));
 
   return (
     <div className="main-content">
-      {/* <Navbar />
-          <Routes>
-            <Route path='/' element={<Welcome />} />
-            <Route path='/student' element={<Student />} />
-          </Routes>
-        <Footer /> */}
       <Navbar />
-      <AdminSidebar />
+      <Routes>
+        <Route path="/" element={<Welcome />} />
+        <Route path="/student" element={<Student />} />
+      </Routes>
+      <Footer />
     </div>
   );
 }

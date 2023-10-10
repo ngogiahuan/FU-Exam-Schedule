@@ -61,5 +61,13 @@ export const ListOfStuExam = [
     time: "12:00 - 13:00",
     type: "Final Exam (FE)",
     note: "EOS (Multiple Choice)",
-  },
+  }, {
+    id: 8,
+    day: "December 10, 2023",
+    subject: "PRJ301",
+    room: "300",
+    time: "12:00 - 13:00",
+    type: "Final Exam (FE)",
+    note: "EOS (Multiple Choice)",
+  }
 ];

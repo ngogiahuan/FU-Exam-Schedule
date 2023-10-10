@@ -1,0 +1,27 @@
+.card-schedule {
+    border-radius: 8px;
+    margin-bottom: 8px;
+    padding: 12px;
+    text-align: center;
+}
+
+.card-schedule:hover {
+    background-color: rgba(0, 0, 0, 0.025);
+    box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+
+.card-schedule-content {
+    padding-bottom:0 ;
+    padding: 8px;
+}
+
+
+
+.card-schedule-text {
+    font-size: 18px;
+    color: #000;
+    margin: 0;
+    
+}
