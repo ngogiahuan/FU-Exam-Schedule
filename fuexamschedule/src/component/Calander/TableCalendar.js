@@ -23,6 +23,7 @@ const TableCalendar = () => {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(0);
   const [selectedMonth, setSelectedMonth] = useState(0); // Initialize with January
+  const [selectedSemester, setSelectedSemester] = useState("SPRING"); // Initialize with SPRING
 
   const firstDay = new Date(new Date().getFullYear(), selectedMonth, 1);
   const startingDay = firstDay.getDay();
@@ -34,6 +35,15 @@ const TableCalendar = () => {
   useEffect(() => {
     setCurrentWeek(selectedWeek);
   }, [selectedWeek]);
+
+  // Use an effect to update the selectedMonth when the selectedSemester changes
+  useEffect(() => {
+    // Find the first month of the selected semester
+    const monthsInSelectedSemester = semesters[selectedSemester];
+    if (monthsInSelectedSemester) {
+      setSelectedMonth(monthsInSelectedSemester[0]);
+    }
+  }, [selectedSemester]);
 
   const startDay = currentWeek * 7 - startingDay + 1;
   const endDay = startDay + 6;
@@ -56,6 +66,11 @@ const TableCalendar = () => {
     setSelectedMonth(event.target.value);
   };
 
+  // Function to handle semester selection
+  const handleSemesterChange = (event) => {
+    setSelectedSemester(event.target.value);
+  };
+
   // Define semesters and their months
   const semesters = {
     SPRING: [0, 1, 2, 3], // January, February, March, April
@@ -76,28 +91,32 @@ const TableCalendar = () => {
   return (
     <div style={{ margin: "20px auto", padding: "0px 30px 0px 0px" }}>
       <Typography variant="h4" align="center" fontWeight='600' letterSpacing={'5px'}>
-          {getSemesterForMonth(selectedMonth)}
-        </Typography>
-        
-        <div className="calendar-btn-pre-next">
-          <Button
-            onClick={() => setSelectedWeek(selectedWeek - 1)}
-            disabled={selectedWeek === 0}
-            variant="contained"
-          >
-            <ChevronLeftIcon />
-          </Button>
-          <Select
-          value={selectedMonth}
-          onChange={handleMonthChange}
+        {getSemesterForMonth(selectedMonth)} 23
+      </Typography>
+
+      <div className="calendar-btn-pre-next">
+        <Button
+          onClick={() => setSelectedWeek(selectedWeek - 1)}
+          disabled={selectedWeek === 0}
+          variant="contained"
         >
-          {Array.from({ length: 12 }, (_, monthIndex) => (
-            <MenuItem key={monthIndex} value={monthIndex}>
-            Month: {monthIndex + 1}
+          <ChevronLeftIcon />
+        </Button>
+        <Select value={selectedSemester} onChange={handleSemesterChange}>
+          {Object.keys(semesters).map((semester) => (
+            <MenuItem key={semester} value={semester}>
+              {semester}
             </MenuItem>
           ))}
         </Select>
-          <Select
+        <Select value={selectedMonth} onChange={handleMonthChange}>
+          {semesters[selectedSemester].map((monthIndex) => (
+            <MenuItem key={monthIndex} value={monthIndex}>
+              Month: {monthIndex + 1}
+            </MenuItem>
+          ))}
+        </Select>
+        <Select
             value={selectedWeek}
             onChange={(event) => setSelectedWeek(event.target.value)}
           >
@@ -107,15 +126,15 @@ const TableCalendar = () => {
               </MenuItem>
             ))}
           </Select>
-          <Button
-            onClick={() => setSelectedWeek(selectedWeek + 1)}
-            disabled={selectedWeek === totalWeeks - 1}
-            variant="contained"
-          >
-            <ChevronRightIcon />
-          </Button>
-        </div>
-      
+        <Button
+          onClick={() => setSelectedWeek(selectedWeek + 1)}
+          disabled={selectedWeek === totalWeeks - 1}
+          variant="contained"
+        >
+          <ChevronRightIcon />
+        </Button>
+      </div>
+
       <TableContainer component={Paper}>
         <Table className="calendar-table">
           <TableHead className="calendar-table-head">
@@ -135,7 +154,6 @@ const TableCalendar = () => {
                     {startDay + dayIndex > 0 && startDay + dayIndex <= totalDays
                       ? (startDay + dayIndex).toString().padStart(2, "0")
                       : ""}
-                    
                   </div>
                 </TableCell>
               ))}
