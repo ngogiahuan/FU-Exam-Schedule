@@ -97,7 +97,7 @@ export default function Login() {
           >
             <List>
               <ListItem>
-                <Avatar alt="User Avatar" src={profile.picture} />
+                <Avatar alt="User Avatar" src={profile.picture} sx={{marginRight: '8px'}} />
                 <ListItemText primary={profile.name} />
               </ListItem>
               <ListItem>
