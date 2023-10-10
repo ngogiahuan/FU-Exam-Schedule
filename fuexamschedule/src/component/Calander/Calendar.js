@@ -1,11 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import CardSelectExaminer from '../CardSchedule/CardSchedule';
-import ListOfExamSlot from '../CardSchedule/ListOfExamSlot';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, MenuItem } from '@mui/material';
-import './CalendarTest.css';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-
+import React, { useState, useEffect } from "react";
+import CardSelectExaminer from "../CardSchedule/CardSchedule";
+import ListOfExamSlot from "../CardSchedule/ListOfExamSlot";
+import {
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Select,
+  MenuItem,
+} from "@mui/material";
+import "./Calendar.css";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 const TableCalendar = ({ year, month }) => {
   const [notes, setNotes] = useState({});
@@ -26,20 +36,22 @@ const TableCalendar = ({ year, month }) => {
   const startDay = currentWeek * 7 - startingDay + 1;
   const endDay = startDay + 6;
 
-
   const handleNoteChange = (date, newNote) => {
     setNotes((prevNotes) => ({
       ...prevNotes,
-      [date.toISOString().split('T')[0]]: newNote,
+      [date.toISOString().split("T")[0]]: newNote,
     }));
   };
 
   // Create an array of week options
-  const weekOptions = Array.from({ length: totalWeeks }, (_, weekIndex) => `Week ${weekIndex + 1}`);
+  const weekOptions = Array.from(
+    { length: totalWeeks },
+    (_, weekIndex) => `Week ${weekIndex + 1}`
+  );
 
   return (
-    <div style={{ margin: '100px auto', width: '70%' }}>
-      <div className='calendar-btn-pre-next' >
+    <div style={{ margin: "20px auto", padding: "0px 30px 0px 0px" }}>
+      <div className="calendar-btn-pre-next">
         <Button
           onClick={() => setSelectedWeek(selectedWeek - 1)}
           disabled={selectedWeek === 0}
@@ -52,7 +64,9 @@ const TableCalendar = ({ year, month }) => {
           onChange={(event) => setSelectedWeek(event.target.value)}
         >
           {weekOptions.map((weekOption, index) => (
-            <MenuItem key={index} value={index}>{weekOption}</MenuItem>
+            <MenuItem key={index} value={index}>
+              {weekOption}
+            </MenuItem>
           ))}
         </Select>
         <Button
@@ -64,9 +78,9 @@ const TableCalendar = ({ year, month }) => {
         </Button>
       </div>
       <TableContainer component={Paper}>
-        <Table className='calendar-table'>
-          <TableHead className='calendar-table-head'>
-            <TableRow className='calendar-table-row'>
+        <Table className="calendar-table">
+          <TableHead className="calendar-table-head">
+            <TableRow className="calendar-table-row">
               <TableCell>Sun</TableCell>
               <TableCell>Mon</TableCell>
               <TableCell>Tue</TableCell>
@@ -75,32 +89,37 @@ const TableCalendar = ({ year, month }) => {
               <TableCell>Fri</TableCell>
               <TableCell>Sat</TableCell>
             </TableRow>
-            <TableRow className='calendar-table-row'>
+            <TableRow className="calendar-table-row">
               {Array.from({ length: 7 }, (_, dayIndex) => (
                 <TableCell key={dayIndex}>
-                {startDay + dayIndex > 0 && startDay + dayIndex <= totalDays
-                  ? (startDay + dayIndex).toString().padStart(2, '0')
-                  : ''}
-              </TableCell>
+                  {startDay + dayIndex > 0 && startDay + dayIndex <= totalDays
+                    ? (startDay + dayIndex).toString().padStart(2, "0")
+                    : ""}
+                </TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableRow style={{verticalAlign: 'top'}} className='calendar-table-row'>
+            <TableRow
+              style={{ verticalAlign: "top" }}
+              className="calendar-table-row"
+            >
               {Array.from({ length: 7 }, (_, dayIndex) => {
                 const dayNumber = startDay + dayIndex;
                 const date = new Date(year, month, dayNumber + 1);
-                const note = notes[date.toISOString().split('T')[0]];
+                const note = notes[date.toISOString().split("T")[0]];
 
                 const matchingSlot = ListOfExamSlot.find(
-                  (slot) => slot.date === date.toISOString().split('T')[0].replace(/-/g, '/')
+                  (slot) =>
+                    slot.date ===
+                    date.toISOString().split("T")[0].replace(/-/g, "/")
                 );
 
                 return (
                   <TableCell key={dayIndex}>
-                      {dayNumber > 0 && dayNumber <= totalDays && matchingSlot && (
-                        <CardSelectExaminer date={date} />
-                      )}
+                    {dayNumber > 0 &&
+                      dayNumber <= totalDays &&
+                      matchingSlot && <CardSelectExaminer date={date} />}
                   </TableCell>
                 );
               })}

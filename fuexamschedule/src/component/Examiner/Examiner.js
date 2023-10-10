@@ -1,11 +1,10 @@
-import React from 'react'
+import React from "react";
 
-import './Examiner.css'
+import "./Examiner.css";
+import Sidebar from "../SideBar/SideBar";
+
+const examinerFeatures = ["Regist Exam Slot", "Regist Exam Room"];
 
 export default function Examiner() {
-  return (
-    <div className='container'>
-      
-    </div>
-  )
+  return <Sidebar features={examinerFeatures} />;
 }

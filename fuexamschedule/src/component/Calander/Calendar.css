@@ -5,11 +5,11 @@
     table-layout: fixed;
     margin: 0;
     padding: 0;
-    min-height: 50vh;
+    min-height: 500px;
     border: 1px solid #e8e8e8;
     background-color: #fff;
     border-radius: 2px;
-    box-shadow: 0 1px 3px rgba(0,0,0,.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
     font-size: 14px;
     line-height: 1.42857143;
     color: #666;
@@ -25,8 +25,8 @@
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none
-    
 }
+
 /* 
 .calendar-table .calendar-row {
     width: 100px;
@@ -37,11 +37,17 @@
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-    gap: 20px;
+    gap: 8px;
+    height: 24px;
 }
 
 .calendar-btn-pre-next button {
     border-radius: 8px;
+    box-shadow: none;
+}
+
+.calendar-btn-pre-next button:hover {
+    box-shadow: none;
 }
 
 .calendar-table-head {
@@ -50,7 +56,8 @@
     font-size: 14px;
     padding: 10px;
 }
-.calendar-table-head .calendar-table-row  th{
+
+.calendar-table-head .calendar-table-row th {
     text-align: center;
     font-weight: 500;
 }
@@ -60,16 +67,19 @@
     font-size: 14px;
     padding: 10px 0 0 0;
 }
+
 .calendar-table .calendar-table-head .calendar-table-row:last-child th {
     border-bottom: 0;
     font-size: 28px;
 }
-.calendar-table .calendar-table-head .calendar-table-row:last-child th:hover {  
+
+.calendar-table .calendar-table-head .calendar-table-row:last-child th:hover {
     display: inline-block;
     border-radius: 50%;
     background-color: #2866cb42;
 }
 
-.calendar-table-row th, td {
+.calendar-table-row th,
+td {
     border-right: 1px solid #e8e8e8;
 }

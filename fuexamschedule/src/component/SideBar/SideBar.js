@@ -4,6 +4,7 @@ import { List, ListItem, ListItemText } from "@mui/material";
 import "./SideBar.css";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import Student from "../Student/Student";
+import TableCalendar from "../Calander/Calendar";
 
 export default function Sidebar({ features }) {
   const [selectedFeature, setSelectedFeature] = useState(0);
@@ -11,6 +12,10 @@ export default function Sidebar({ features }) {
   const handleFeatureClick = (index) => {
     setSelectedFeature(index);
   };
+
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const month = 9;
 
   return (
     <Container className="container">
@@ -48,7 +53,7 @@ export default function Sidebar({ features }) {
         {/* Second Item */}
         <Grid item xs={12} md={10} className="content-container">
           {/* Content based on the selectedFeature */}
-          <Student />
+          <TableCalendar year={currentYear} month={month} />
           {/* Add your content here */}
         </Grid>
       </Grid>
