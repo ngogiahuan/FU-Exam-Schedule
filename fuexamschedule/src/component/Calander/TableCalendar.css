@@ -34,11 +34,12 @@
 } */
 
 .calendar-btn-pre-next {
+    width: 100%;
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
+    margin: 20px 0;
     gap: 8px;
-    height: 24px;
+    height: 36px;
 }
 
 .calendar-btn-pre-next button {
@@ -56,6 +57,10 @@
     font-size: 14px;
     padding: 10px;
 }
+/* 
+.calendar-table-head tr {
+    padding-bottom: 20px;
+} */
 
 .calendar-table-head .calendar-table-row th {
     text-align: center;
@@ -65,16 +70,24 @@
 .calendar-table .calendar-table-head .calendar-table-row:first-child th {
     border-bottom: 0;
     font-size: 14px;
+    color: #999;
     padding: 10px 0 0 0;
 }
 
+
 .calendar-table .calendar-table-head .calendar-table-row:last-child th {
     border-bottom: 0;
-    font-size: 28px;
+    padding: 0 0 8px 0;
 }
 
-.calendar-table .calendar-table-head .calendar-table-row:last-child th:hover {
+.calendar-table .calendar-table-head .calendar-table-row:last-child th .calendar-table-row-day {
     display: inline-block;
+    padding: 12px;
+    font-size: 28px;
+    line-height: 28px;
+}
+
+.calendar-table .calendar-table-head .calendar-table-row:last-child .calendar-table-row-day:hover {
     border-radius: 50%;
     background-color: #2866cb42;
 }

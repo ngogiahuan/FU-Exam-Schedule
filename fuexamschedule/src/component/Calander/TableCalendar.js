@@ -12,19 +12,21 @@ import {
   Paper,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
-import "./Calendar.css";
+import "./TableCalendar.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const TableCalendar = ({ year, month }) => {
+const TableCalendar = () => {
   const [notes, setNotes] = useState({});
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(0);
+  const [selectedMonth, setSelectedMonth] = useState(0); // Initialize with January
 
-  const firstDay = new Date(year, month, 1);
+  const firstDay = new Date(new Date().getFullYear(), selectedMonth, 1);
   const startingDay = firstDay.getDay();
-  const lastDay = new Date(year, month + 1, 0);
+  const lastDay = new Date(new Date().getFullYear(), selectedMonth + 1, 0);
   const totalDays = lastDay.getDate();
   const totalWeeks = Math.ceil((totalDays + startingDay) / 7);
 
@@ -49,34 +51,71 @@ const TableCalendar = ({ year, month }) => {
     (_, weekIndex) => `Week ${weekIndex + 1}`
   );
 
+  // Function to handle month selection
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
+  // Define semesters and their months
+  const semesters = {
+    SPRING: [0, 1, 2, 3], // January, February, March, April
+    SUMMER: [4, 5, 6, 7], // May, June, July, August
+    FALL: [8, 9, 10, 11], // September, October, November, December
+  };
+
+  // Function to determine the semester based on the selected month
+  const getSemesterForMonth = (month) => {
+    for (const [semester, months] of Object.entries(semesters)) {
+      if (months.includes(month)) {
+        return semester;
+      }
+    }
+    return "Unknown Semester";
+  };
+
   return (
     <div style={{ margin: "20px auto", padding: "0px 30px 0px 0px" }}>
-      <div className="calendar-btn-pre-next">
-        <Button
-          onClick={() => setSelectedWeek(selectedWeek - 1)}
-          disabled={selectedWeek === 0}
-          variant="contained"
+      <Typography variant="h4" align="center" fontWeight='600' letterSpacing={'5px'}>
+          {getSemesterForMonth(selectedMonth)}
+        </Typography>
+        
+        <div className="calendar-btn-pre-next">
+          <Button
+            onClick={() => setSelectedWeek(selectedWeek - 1)}
+            disabled={selectedWeek === 0}
+            variant="contained"
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <Select
+          value={selectedMonth}
+          onChange={handleMonthChange}
         >
-          <ChevronLeftIcon />
-        </Button>
-        <Select
-          value={selectedWeek}
-          onChange={(event) => setSelectedWeek(event.target.value)}
-        >
-          {weekOptions.map((weekOption, index) => (
-            <MenuItem key={index} value={index}>
-              {weekOption}
+          {Array.from({ length: 12 }, (_, monthIndex) => (
+            <MenuItem key={monthIndex} value={monthIndex}>
+            Month: {monthIndex + 1}
             </MenuItem>
           ))}
         </Select>
-        <Button
-          onClick={() => setSelectedWeek(selectedWeek + 1)}
-          disabled={selectedWeek === totalWeeks - 1}
-          variant="contained"
-        >
-          <ChevronRightIcon />
-        </Button>
-      </div>
+          <Select
+            value={selectedWeek}
+            onChange={(event) => setSelectedWeek(event.target.value)}
+          >
+            {weekOptions.map((weekOption, index) => (
+              <MenuItem key={index} value={index}>
+                {weekOption}
+              </MenuItem>
+            ))}
+          </Select>
+          <Button
+            onClick={() => setSelectedWeek(selectedWeek + 1)}
+            disabled={selectedWeek === totalWeeks - 1}
+            variant="contained"
+          >
+            <ChevronRightIcon />
+          </Button>
+        </div>
+      
       <TableContainer component={Paper}>
         <Table className="calendar-table">
           <TableHead className="calendar-table-head">
@@ -92,9 +131,12 @@ const TableCalendar = ({ year, month }) => {
             <TableRow className="calendar-table-row">
               {Array.from({ length: 7 }, (_, dayIndex) => (
                 <TableCell key={dayIndex}>
-                  {startDay + dayIndex > 0 && startDay + dayIndex <= totalDays
-                    ? (startDay + dayIndex).toString().padStart(2, "0")
-                    : ""}
+                  <div className="calendar-table-row-day">
+                    {startDay + dayIndex > 0 && startDay + dayIndex <= totalDays
+                      ? (startDay + dayIndex).toString().padStart(2, "0")
+                      : ""}
+                    
+                  </div>
                 </TableCell>
               ))}
             </TableRow>
@@ -106,7 +148,7 @@ const TableCalendar = ({ year, month }) => {
             >
               {Array.from({ length: 7 }, (_, dayIndex) => {
                 const dayNumber = startDay + dayIndex;
-                const date = new Date(year, month, dayNumber + 1);
+                const date = new Date(2023, selectedMonth, dayNumber + 1);
                 const note = notes[date.toISOString().split("T")[0]];
 
                 const matchingSlot = ListOfExamSlot.find(
