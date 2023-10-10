@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import ListOfExamSlot from "../CardSchedule/ListOfExamSlot";
 import "./CardSchedule.css";
-import Chip from "@mui/material/Chip";
-import Divider from "@mui/material/Divider";
 import { Badge } from "@mui/material";
 import CardScheduleModal from "./CardScheduleModal";
 
