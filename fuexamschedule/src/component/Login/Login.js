@@ -50,7 +50,7 @@ export default function Login() {
           setProfile(res.data);
           sessionStorage.setItem("userProfile", JSON.stringify(res.data));
           console.log(res.data);
-          navigate("/student");
+          navigate("/admin/manage-student");
         })
         .catch((err) => {
           console.log(err);
@@ -97,7 +97,11 @@ export default function Login() {
           >
             <List>
               <ListItem>
-                <Avatar alt="User Avatar" src={profile.picture} sx={{marginRight: '8px'}} />
+                <Avatar
+                  alt="User Avatar"
+                  src={profile.picture}
+                  sx={{ marginRight: "8px" }}
+                />
                 <ListItemText primary={profile.name} />
               </ListItem>
               <ListItem>
