@@ -1,10 +1,11 @@
 import React from "react";
 import AdminSidebar from "./Admin";
+import DataTable from "./DataTable";
 
 export default function ManageStudent() {
   return (
     <>
-      <div>ManageStudent</div>
+      <DataTable></DataTable>
     </>
   );
 }
