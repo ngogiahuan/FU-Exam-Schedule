@@ -50,7 +50,7 @@ export default function Login() {
           setProfile(res.data);
           sessionStorage.setItem("userProfile", JSON.stringify(res.data));
           console.log(res.data);
-          navigate("/admin/manage-student");
+          navigate("/student/view-exam-schedule");
         })
         .catch((err) => {
           console.log(err);

@@ -1,5 +1,4 @@
 import React from "react";
-import Sidebar from "../SideBar/SideBar";
 import Body from "../Body/Body";
 import ManageStudent from "./ManageStudent";
 import ManageRoom from "./ManageRoom";
