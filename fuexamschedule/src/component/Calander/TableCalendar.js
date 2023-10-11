@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import CardSelectExaminer from "../CardSchedule/CardSchedule";
-import ListOfExamSlot from "../CardSchedule/ListOfExamSlot";
 import {
   Button,
   Table,
@@ -18,7 +16,7 @@ import "./TableCalendar.css";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-const TableCalendar = () => {
+const TableCalendar = ({list, content: ContentComponent }) => {
   const [notes, setNotes] = useState({});
   const [currentWeek, setCurrentWeek] = useState(0);
   const [selectedWeek, setSelectedWeek] = useState(0);
@@ -102,7 +100,7 @@ const TableCalendar = () => {
         >
           <ChevronLeftIcon />
         </Button>
-        <Select value={selectedSemester} onChange={handleSemesterChange}>
+        <Select sx={{width: '120px', textAlign: 'center'}} value={selectedSemester} onChange={handleSemesterChange}>
           {Object.keys(semesters).map((semester) => (
             <MenuItem key={semester} value={semester}>
               {semester}
@@ -169,7 +167,7 @@ const TableCalendar = () => {
                 const date = new Date(2023, selectedMonth, dayNumber + 1);
                 const note = notes[date.toISOString().split("T")[0]];
 
-                const matchingSlot = ListOfExamSlot.find(
+                const matchingSlot = list.find(
                   (slot) =>
                     slot.date ===
                     date.toISOString().split("T")[0].replace(/-/g, "/")
@@ -179,7 +177,7 @@ const TableCalendar = () => {
                   <TableCell key={dayIndex}>
                     {dayNumber > 0 &&
                       dayNumber <= totalDays &&
-                      matchingSlot && <CardSelectExaminer date={date} />}
+                      matchingSlot && <ContentComponent list={list} date={date} />}
                   </TableCell>
                 );
               })}

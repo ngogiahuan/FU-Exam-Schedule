@@ -1,6 +1,6 @@
 
 
-.container {
+.stu-card-container {
     width: 100%;
     gap: 20px;
     margin: 0 auto;
@@ -15,7 +15,7 @@
     transition: all 0.2s ease-out;
     box-shadow: 0px 8px 8px rgba(38, 38, 38, 0.2);
     top: -6px;
-    background-color: #88abe8;
+    /* background-color: #88abe8; */
 }
 
 table tr {
@@ -29,4 +29,25 @@ table tr {
 .td-data span {
     margin-right: 12px;
     
+}
+
+.stu-card-table {
+    width: 100%;
+
+}
+
+.stu-card-row {
+    width: 100%;
+    vertical-align: middle;
+}
+
+.stu-card-row td {
+    border: none;
+}
+.stu-card-row td:last-child {
+    vertical-align: right;
+}
+
+.stu-card-chip {
+    width: 60px;
 }
