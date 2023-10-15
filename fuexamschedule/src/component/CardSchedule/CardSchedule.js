@@ -42,7 +42,9 @@ export default function CardSchedule({list, date }) {
           <Card
             className="card-schedule"
             key={index}
-            onClick={() => handleOpenModal(slot)} // Open the modal when the card is clicked
+            onClick={() => handleOpenModal(slot)}
+            sx={{
+              border: "0.5px solid #e8e8e8",}}
           >
             <Typography className="card-schedule-text">{slot.time}</Typography>
           </Card>

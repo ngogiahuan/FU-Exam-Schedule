@@ -5,7 +5,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -14,7 +14,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -23,7 +23,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -32,7 +32,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -41,7 +41,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -50,7 +50,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   },
   {
@@ -59,7 +59,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   }, {
     id: 8,
@@ -67,7 +67,7 @@ const ListOfStuExam = [
     subject: "PRJ301",
     room: "300",
     time: "12:00 - 13:00",
-    type: "FE",
+    type: "Final Exam (FE)",
     note: "EOS",
   }
 ];
