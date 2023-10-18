@@ -1,9 +1,0 @@
-.sidebar-grid {
-    height: calc(100vh - 65px);
-    border-right: 1px solid #e0e0e0;
-}
-
-.link-button {
-    text-decoration: none;
-    color: #000;
-}
