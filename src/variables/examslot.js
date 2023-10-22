@@ -1,0 +1,42 @@
+export const tablesTableData_ExamSlot = [
+  {
+    id: 1,
+    subCode: "ENW492c",
+    subName: "Writing Research Papers",
+    startTime: "7h00 16/12/2023",
+    endTime: "9h30 16/12/2023",
+    status: "CHƯA BẮT ĐẦU",
+  },
+  {
+    id: 2,
+    subCode: "ENW492c",
+    subName: "Writing Research Papers",
+    startTime: "7h00 16/12/2023",
+    endTime: "9h30 16/12/2023",
+    status: "KẾT THÚC",
+  },
+  {
+    id: 3,
+    subCode: "ENW492c",
+    subName: "Writing Research Papers",
+    startTime: "7h00 16/12/2023",
+    endTime: "9h30 16/12/2023",
+    status: "CHƯA BẮT ĐẦU",
+  },
+  {
+    id: 4,
+    subCode: "ENW492c",
+    subName: "Writing Research Papers",
+    startTime: "7h00 16/12/2023",
+    endTime: "9h30 16/12/2023",
+    status: "KẾT THÚC",
+  },
+  {
+    id: 5,
+    subCode: "ENW492c",
+    subName: "Writing Research Papers",
+    startTime: "7h00 16/12/2023",
+    endTime: "9h30 16/12/2023",
+    status: "CHƯA BẮT ĐẦU",
+  },
+];

@@ -181,7 +181,7 @@ argon-dashboard-chakra/
     │   └── general.js
     ├── views
     │   ├── Dashboard
-    │   │   ├── Billing.js
+    │   │   ├── Calendar.js
     │   │   ├── Dashboard.js
     │   │   ├── Profile.js
     │   │   └── Tables.js

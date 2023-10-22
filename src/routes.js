@@ -2,7 +2,7 @@
 import React, { Component } from "react";
 import Dashboard from "views/Dashboard/Dashboard.js";
 import Tables from "views/Dashboard/Tables.js";
-import Billing from "views/Dashboard/Billing.js";
+import Calendar from "views/Dashboard/Calendar.js";
 import RTLPage from "views/RTL/RTLPage.js";
 import Profile from "views/Dashboard/Profile.js";
 import SignIn from "views/Pages/SignIn.js";
@@ -32,19 +32,12 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/billing",
+    path: "/calendar",
     name: "Lịch thi",
     icon: <CalendarIcon color="inherit" />,
-    // component: Billing,
+    component: Calendar,
     layout: "/admin",
   },
-  // {
-  //   path: "/rtl-support-page",
-  //   name: "RTL",
-  //   icon: <SupportIcon color="inherit" />,
-  //   component: RTLPage,
-  //   layout: "/rtl",
-  // },
   {
     name: "Tài Khoản",
     category: "account",
