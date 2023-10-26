@@ -246,6 +246,9 @@ function Sidebar(props) {
           Exam Schedule
         </Heading>
       </Stack>
+      <Heading marginLeft={"20%"} marginTop={"10%"} as="h6" size="xs">
+        Chào, Ngô Gia Huấn
+      </Heading>
       <HSeparator my="26px" />
     </Box>
   );

@@ -20,7 +20,7 @@ import {
   FormControl,
   FormLabel,
   Input,
-  ButtonGroup,
+  Select,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -205,30 +205,35 @@ function Billing() {
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">Thêm lịch thi mới</DrawerHeader>
           <DrawerBody>
-            <FormControl id="first-name" isRequired>
-              <FormLabel>Thông tin 1</FormLabel>
-              <Input placeholder="First name" />
+            <FormControl marginBottom={5} id="courseid" isRequired>
+              <FormLabel>Course</FormLabel>
+              <Select placeholder="Lựa chọn Course">
+                <option>Course 1</option>
+                <option>Course 2</option>
+              </Select>
             </FormControl>
-            <FormControl id="first-name">
-              <FormLabel>Thông tin 1</FormLabel>
-              <Input placeholder="First name" />
+            <FormControl marginBottom={5} id="code" isRequired>
+              <FormLabel>Mã ca thi</FormLabel>
+              <Select placeholder="Lựa chọn mã">
+                <option>Code 1</option>
+                <option>Code 2</option>
+              </Select>
             </FormControl>
-            <FormControl id="first-name">
-              <FormLabel>Thông tin 1</FormLabel>
-              <Input placeholder="First name" />
+            <FormControl marginBottom={5} id="startTime" isRequired>
+              <FormLabel>Ngày thi</FormLabel>
+              <Input type="date" />
             </FormControl>
-            <FormControl id="first-name">
-              <FormLabel>Thông tin 1</FormLabel>
-              <Input placeholder="First name" />
+            <FormControl marginBottom={5} id="startTime" isRequired>
+              <FormLabel>Thời gian bắt đầu</FormLabel>
+              <Input type="time" />
             </FormControl>
-            <FormControl id="first-name">
-              <FormLabel>Thông tin 1</FormLabel>
-              <Input placeholder="First name" />
+            <FormControl marginBottom={5} id="endTime" isRequired>
+              <FormLabel>Thời gian kết thúc</FormLabel>
+              <Input type="time" />
             </FormControl>
             <Flex mt={5}>
               <Button colorScheme="blue">Tạo mới</Button>
               <Spacer />
-              <Button>Hủy</Button>
             </Flex>
           </DrawerBody>
         </DrawerContent>
