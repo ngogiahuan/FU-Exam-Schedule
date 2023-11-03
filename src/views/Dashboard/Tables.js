@@ -16,10 +16,14 @@ import CardHeader from "components/Card/CardHeader.js";
 import TablesTableRow from "components/Tables/TablesTableRow";
 import React from "react";
 import { tablesTableData } from "variables/general";
+import { useAccount } from '../../components/share/AccountContext';
+import { useUser } from '../../components/share/UserContext';
 
 function Tables() {
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+  const { account, loadingAccount } = useAccount();
+  const { user, flag, setFlag } = useUser();
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -39,28 +43,15 @@ function Tables() {
                 <Th borderColor={borderColor} color="gray.400">
                   Chức vụ
                 </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Trạng thái
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Ngày đăng kí
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Chức năng
-                </Th>
               </Tr>
             </Thead>
             <Tbody>
-              {tablesTableData.map((row, index, arr) => {
+              {account.map((row, index, arr) => {
                 return (
                   <TablesTableRow
-                    name={row.name}
-                    logo={row.logo}
+                    name={row.userName}
                     email={row.email}
-                    subdomain={row.subdomain}
-                    domain={row.domain}
-                    status={row.status}
-                    date={row.date}
+                    subdomain={row.Role}
                     isLast={index === arr.length - 1 ? true : false}
                     key={index}
                   />

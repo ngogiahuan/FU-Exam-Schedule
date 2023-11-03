@@ -31,13 +31,15 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 // You should also import some data for the table
+import { tablesTableData_ExamSlot } from "variables/examslot";
 import { useDisclosure } from "@chakra-ui/react";
-import { useHistory } from 'react-router-dom';
 
 // Import useContext value
-import { useExamSchedule } from '../../components/share/ExamScheduleContext';
+import { useClassRoom } from '../../components/share/ClassRoomContext';
+import { useExaminer } from '../../components/share/ExaminerContext';
+import { useExamSlot } from '../../components/share/ExamSlotContext';
 import { useExamRoom } from '../../components/share/ExamRoomContext';
-import { useCourse } from '../../components/share/CourseContext';
+import { useUser } from '../../components/share/UserContext';
 
 function Billing() {
   // Chakra color mode
@@ -45,14 +47,19 @@ function Billing() {
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const titleColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "navy.900");
-  const history = useHistory();
 
   // Custone hook
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { examSchedule, loading } = useExamSchedule();
-  const { setSubjectID, setSubjectName, setExamSlotID } = useExamRoom();
-  const { course, loadingCourse } = useCourse();
-
+  const { examSlot, loadingExamSlot } = useExamSlot();
+  const { classRoom, loadingClassRoom } = useClassRoom();
+  const { examiner, loadingExaminer } = useExaminer();
+  const { user, flag, setFlag } = useUser();
+  const [examSlotInfo, setExamSlotInfo] = useState({
+    examSlotID: "",
+    subjectID: "",
+    subjectName: ""
+  });
+  const [loadingExamSlotInfo, setLoadingExamSlotInfo] = useState(true);
 
   const [formData, setFormData] = useState({
     courseID: "",
@@ -62,43 +69,55 @@ function Billing() {
     endTime: "",
   });
 
-  // Call api create Slot thi
-  const handleCreateExamSlot = async (e) => {
+  // Call api tạo thông tin phòng thi
+  const handleCreateExamRoom = async (e) => {
     e.preventDefault();
 
-    const { courseID, code, date, startTime, endTime } = formData;
-
-    // Combine date and time strings
-    const startDateTimeString = `${date}T${startTime}:00.000Z`;
-    const endDateTimeString = `${date}T${endTime}:00.000Z`;
-
-    // Convert to Date objects
-
-    const startDate = new Date(startDateTimeString);
-    const endDate = new Date(endDateTimeString);
+    const { classRoomID, examSlotID, subjectID, examinerID } = formData;
     try {
       const response = await axios.post(
-        "https://swp3191.onrender.com/exam-schedule",
+        "https://swp3191.onrender.com/exam-room",
         {
-          courseID: courseID,
-          code: code,
-          startTime: startDate.toISOString(),
-          endTime: endDate.toISOString(),
+          classRoomID: classRoomID,
+          examSlotID: examSlotID,
+          subjectID: subjectID,
+          examinerID: examinerID,
         }
       );
-      console.log(response.data);
-      if (response.data) {
-        alert('Tạo ca thi thành công, hệ thống sẽ điều hướng bạn đến trang nhập thông tin')
-        setSubjectID(response.data.result.subjectID)
-        setSubjectName(response.data.result.subjectName)
-        setExamSlotID(response.data.result.examSlotID)
-        history.push('/admin/examRoom');
+      if (response.status === 200) {
+        alert('Tạo phòng thi thành công')
+        setFlag(!flag)
       }
     } catch (error) {
       console.error("POST request error:", error);
-      alert('Tạo ca thi thất bại')
+      alert('Tạo phòng thi thất bại')
     }
   };
+
+  function getInfoByExamSlot(id){
+    const fetchData = async (id) => {
+      try {
+        const response = await axios.get(`https://swp3191.onrender.com/examSlot/info/${id}`, {
+          withCredentials: true, 
+        });
+        if (response.data){
+          let item = {
+            examSlotID: response?.data?.result[0].examSlotID,
+            subjectID: response?.data?.result[0].subjectID,
+            subjectName: response?.data?.result[0].subjectName
+          }
+          setExamSlotInfo(item);
+          setLoadingExamSlotInfo(false);
+          onOpen()
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        setLoadingExamSlotInfo(false);
+        alert('Ca thi không có thông tin để thực hiện tạo phòng thi')
+      }
+    };
+    fetchData(id);
+  }
 
   // Function handle
   const handleInputChange = (e) => {
@@ -115,11 +134,11 @@ function Billing() {
         <CardHeader p="6px 0px 22px 0px" flexWrap>
           <Flex>
             <Text fontSize="xl" color={textColor} fontWeight="bold">
-              Lịch Thi
+              Danh sách phòng thi
             </Text>
             <Spacer />
-            <Button onClick={onOpen} colorScheme="blue" variant="solid">
-              Thêm Slot Thi
+            <Button disabled={examSlotInfo.subjectID == ""} onClick={onOpen} colorScheme="blue" variant="solid">
+              Nhập thông tin phòng thi cho slot vừa tạo
             </Button>
           </Flex>
         </CardHeader>
@@ -131,19 +150,16 @@ function Billing() {
                   ID
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Mã môn
+                  Mã thi
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Tên môn
+                  Thời gian bắt đầu
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Giờ bắt đầu
+                  Thời gian kết thúc
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Giờ kết thúc
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Trạng thái
+                  Tổng số giám thị
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
                   Chức năng
@@ -151,7 +167,7 @@ function Billing() {
               </Tr>
             </Thead>
             <Tbody>
-              {!loading && examSchedule.map((row, index, arr) => {
+              {!loadingExamSlot && examSlot.map((row, index, arr) => {
                 return (
                   <Tr>
                     {/* ID */}
@@ -173,30 +189,19 @@ function Billing() {
                             fontWeight="bold"
                             minWidth="100%"
                           >
-                            {row.examSlotID}
+                            {row.ID}
                           </Text>
                         </Flex>
                       </Flex>
                     </Td>
-                    {/* subCode */}
+                    {/* examBatchID */}
                     <Td
                       borderColor={borderColor}
                       borderBottom={index ? "none" : null}
                     >
                       <Flex direction="column">
                         <Text fontSize="md" color={textColor} fontWeight="bold">
-                          {row.subjectID}
-                        </Text>
-                      </Flex>
-                    </Td>
-                    {/* subName */}
-                    <Td
-                      borderColor={borderColor}
-                      borderBottom={index ? "none" : null}
-                    >
-                      <Flex direction="column">
-                        <Text fontSize="md" color={textColor} fontWeight="bold">
-                          {row.courseName}
+                          {row.examBatchID}
                         </Text>
                       </Flex>
                     </Td>
@@ -205,14 +210,11 @@ function Billing() {
                       borderColor={borderColor}
                       borderBottom={index ? "none" : null}
                     >
-                      <Text
-                        fontSize="md"
-                        color={textColor}
-                        fontWeight="bold"
-                        pb=".5rem"
-                      >
-                        {row.startTime}
-                      </Text>
+                      <Flex direction="column">
+                        <Text fontSize="md" color={textColor} fontWeight="bold">
+                          {row.startTime}
+                        </Text>
+                      </Flex>
                     </Td>
                     {/* endTime */}
                     <Td
@@ -228,36 +230,33 @@ function Billing() {
                         {row.endTime}
                       </Text>
                     </Td>
-                    {/* Status */}
+                    {/* quantity */}
                     <Td
                       borderColor={borderColor}
                       borderBottom={index ? "none" : null}
                     >
-                      <Badge
-                        bg={"CHƯA BẮT ĐẦU" === "CHƯA BẮT ĐẦU" ? "green.400" : "red"}
-                        color={
-                          row.status === "CHƯA BẮT ĐẦU" ? "white" : "black"
-                        }
-                        fontSize="16px"
-                        p="3px 10px"
-                        borderRadius="8px"
+                      <Text
+                        fontSize="md"
+                        color={textColor}
+                        fontWeight="bold"
+                        pb=".5rem"
                       >
-                        CHƯA BẮT ĐẦU
-                      </Badge>
+                        {row.quantity}
+                      </Text>
                     </Td>
                     {/* Edit */}
                     <Td
                       borderColor={borderColor}
                       borderBottom={index ? "none" : null}
                     >
-                      <Button p="0px" bg="transparent" variant="no-effects">
+                      <Button disabled={row.quantity > 1 } onClick={() => getInfoByExamSlot(row.ID)} p="0px" bg="transparent" variant="no-effects">
                         <Text
                           fontSize="md"
                           color="blue.400"
                           fontWeight="bold"
                           cursor="pointer"
                         >
-                          Chỉnh sửa
+                          Tạo phòng thi
                         </Text>
                       </Button>
                     </Td>
@@ -271,18 +270,36 @@ function Billing() {
       <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Thêm lịch thi mới</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">Nhập thông tin phòng thi</DrawerHeader>
           <DrawerBody>
-            <form onSubmit={(e) => handleCreateExamSlot(e)}>
-              <FormControl marginBottom={5} id="courseID" isRequired>
-                <FormLabel>Course</FormLabel>
+            <form onSubmit={(e) => handleCreateExamRoom(e)}>
+              {/* Chọn thông tin lớp */}
+              <FormControl marginBottom={5} id="classRoomID" isRequired>
+                <FormLabel>Mã lớp</FormLabel>
                 <Select
-                  placeholder="Lựa chọn Course"
-                  id="courseID"
-                  value={formData.courseID}
+                  placeholder="Lựa chọn phòng thi"
+                  id="classRoomID"
+                  value={formData.classRoomID}
                   onChange={handleInputChange}
                 >
-                  {!loadingCourse && course.map((item) => (
+                  {!loadingClassRoom && classRoom.map((item) => (
+                    <option key={item.ID} value={item.ID}>
+                      {item.ID}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              {/* Chọn thông giám thị coi thi */}
+              <FormControl marginBottom={5} id="examinerID" isRequired>
+                <FormLabel>Giám thị</FormLabel>
+                <Select
+                  placeholder="Lựa chọn giám thị"
+                  id="examinerID"
+                  value={formData.examinerID}
+                  onChange={handleInputChange}
+                >
+                  {!loadingExaminer && examiner.map((item) => (
                     <option key={item.ID} value={item.ID}>
                       {item.name}
                     </option>
@@ -290,44 +307,31 @@ function Billing() {
                 </Select>
               </FormControl>
 
-              <FormControl marginBottom={5} id="code" isRequired>
-                <FormLabel>Mã ca thi</FormLabel>
+              {/* Thông tin slot thi vừa tạo */}
+              <FormControl marginBottom={5} id="examSlotID" isRequired>
+                <FormLabel>Slot vừa tạo</FormLabel>
                 <Input
                   type="text"
-                  placeholder="Ví dụ: JS1701"
-                  id="code"
-                  value={formData.code}
-                  onChange={handleInputChange}
+                  id="examSlotID"
+                  defaultValue={examSlotInfo.examSlotID}
+                  readOnly
                 />
               </FormControl>
 
-              <FormControl marginBottom={5} id="date" isRequired>
-                <FormLabel>Ngày thi</FormLabel>
+              {/* Thông tin mã môn thi */}
+              <FormControl marginBottom={5} id="subjectName" isRequired>
+                <FormLabel>Tên môn thi</FormLabel>
                 <Input
-                  type="date"
-                  id="date"
-                  value={formData.date}
-                  onChange={handleInputChange}
+                  type="text"
+                  id="subjectName"
+                  defaultValue={examSlotInfo.subjectName}
+                  readOnly
                 />
-              </FormControl>
-
-              <FormControl marginBottom={5} id="startTime" isRequired>
-                <FormLabel>Thời gian bắt đầu</FormLabel>
                 <Input
-                  type="time"
-                  id="startTime"
-                  value={formData.startTime}
-                  onChange={handleInputChange}
-                />
-              </FormControl>
-
-              <FormControl marginBottom={5} id="endTime" isRequired>
-                <FormLabel>Thời gian kết thúc</FormLabel>
-                <Input
-                  type="time"
-                  id="endTime"
-                  value={formData.endTime}
-                  onChange={handleInputChange}
+                  type="text"
+                  id="subjectID"
+                  defaultValue={examSlotInfo.subjectID}
+                  style={{ display: 'none' }}
                 />
               </FormControl>
 

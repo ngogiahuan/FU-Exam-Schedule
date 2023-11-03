@@ -3,8 +3,11 @@ import React from "react";
 import Dashboard from "views/Dashboard/Dashboard.js";
 import Tables from "views/Dashboard/Tables.js";
 import Calendar from "views/Dashboard/Calendar.js";
+import CreateExamRoom from "views/Dashboard/CreateExamRoom.js";
+import ExamSlot from "views/Dashboard/ExamSlot.js";
 import SignIn from "views/Pages/SignIn.js";
 import SignUp from "views/Pages/SignUp.js";
+
 
 import {
   HomeIcon,
@@ -27,6 +30,20 @@ var dashRoutes = [
     name: "Quản lí tài khoản",
     icon: <StatsIcon color="inherit" />,
     component: Tables,
+    layout: "/admin",
+  },
+  {
+    path: "/examRoom",
+    name: "Phòng thi",
+    icon: <CalendarIcon color="inherit" />,
+    component: CreateExamRoom,
+    layout: "/admin",
+  },
+  {
+    path: "/examSlot",
+    name: "Ca thi",
+    icon: <CalendarIcon color="inherit" />,
+    component: ExamSlot,
     layout: "/admin",
   },
   {
