@@ -43,7 +43,7 @@ function SignIn() {
           alignItems="center"
           justifyContent="center"
           mb="60px"
-          mt={{ base: "50px", md: "20px" }}
+          // mt={{ base: "50px", md: "20px" }}
         >
           <Flex
             zIndex="2"
@@ -222,6 +222,7 @@ function SignIn() {
           </Flex>
         </Flex>
         <Box
+          id="1"
           overflowX="hidden"
           h="100%"
           w="100%"

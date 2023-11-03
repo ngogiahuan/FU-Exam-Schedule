@@ -1,3 +1,7 @@
+// Library imports
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+
 // Chakra imports
 import {
   Flex,
@@ -26,10 +30,13 @@ import {
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
-import React from "react";
 // You should also import some data for the table
 import { tablesTableData_ExamSlot } from "variables/examslot";
 import { useDisclosure } from "@chakra-ui/react";
+
+// Import useContext value
+import { useExamSchedule } from '../../components/share/ExamScheduleContext';
+import { useCourse } from '../../components/share/CourseContext';
 
 function Billing() {
   // Chakra color mode
@@ -40,6 +47,57 @@ function Billing() {
 
   // Custone hook
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { examSchedule, loading } = useExamSchedule();
+  const { course, loadingCourse } = useCourse();
+
+
+  const [formData, setFormData] = useState({
+    courseID: "",
+    code: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+  });
+
+  // Call api create Slot thi
+  const handleCreateExamSlot = async (e) => {
+    e.preventDefault();
+
+    const { courseID, code, date, startTime, endTime } = formData;
+
+    // Combine date and time strings
+    const startDateTimeString = `${date}T${startTime}:00.000Z`;
+    const endDateTimeString = `${date}T${endTime}:00.000Z`;
+
+    // Convert to Date objects
+
+    const startDate = new Date(startDateTimeString);
+    const endDate = new Date(endDateTimeString);
+    try {
+      const response = await axios.post(
+        "https://swp3191.onrender.com/exam-schedule",
+        {
+          courseID: courseID,
+          code: code,
+          startTime: startDate.toISOString(),
+          endTime: endDate.toISOString(),
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("POST request error:", error);
+    }
+  };
+
+  // Function handle
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData({
+      ...formData,
+      [id]: value,
+    });
+  };
 
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -83,7 +141,7 @@ function Billing() {
               </Tr>
             </Thead>
             <Tbody>
-              {tablesTableData_ExamSlot.map((row, index, arr) => {
+              {!loading && examSchedule.map((row, index, arr) => {
                 return (
                   <Tr>
                     {/* ID */}
@@ -105,7 +163,7 @@ function Billing() {
                             fontWeight="bold"
                             minWidth="100%"
                           >
-                            {row.id}
+                            {row.examSlotID}
                           </Text>
                         </Flex>
                       </Flex>
@@ -117,7 +175,7 @@ function Billing() {
                     >
                       <Flex direction="column">
                         <Text fontSize="md" color={textColor} fontWeight="bold">
-                          {row.subCode}
+                          {row.subjectID}
                         </Text>
                       </Flex>
                     </Td>
@@ -128,7 +186,7 @@ function Billing() {
                     >
                       <Flex direction="column">
                         <Text fontSize="md" color={textColor} fontWeight="bold">
-                          {row.subName}
+                          {row.courseName}
                         </Text>
                       </Flex>
                     </Td>
@@ -166,7 +224,7 @@ function Billing() {
                       borderBottom={index ? "none" : null}
                     >
                       <Badge
-                        bg={row.status === "CHƯA BẮT ĐẦU" ? "green.400" : "red"}
+                        bg={"CHƯA BẮT ĐẦU" === "CHƯA BẮT ĐẦU" ? "green.400" : "red"}
                         color={
                           row.status === "CHƯA BẮT ĐẦU" ? "white" : "black"
                         }
@@ -174,7 +232,7 @@ function Billing() {
                         p="3px 10px"
                         borderRadius="8px"
                       >
-                        {row.status}
+                        CHƯA BẮT ĐẦU
                       </Badge>
                     </Td>
                     {/* Edit */}
@@ -205,36 +263,71 @@ function Billing() {
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">Thêm lịch thi mới</DrawerHeader>
           <DrawerBody>
-            <FormControl marginBottom={5} id="courseid" isRequired>
-              <FormLabel>Course</FormLabel>
-              <Select placeholder="Lựa chọn Course">
-                <option>Course 1</option>
-                <option>Course 2</option>
-              </Select>
-            </FormControl>
-            <FormControl marginBottom={5} id="code" isRequired>
-              <FormLabel>Mã ca thi</FormLabel>
-              <Select placeholder="Lựa chọn mã">
-                <option>Code 1</option>
-                <option>Code 2</option>
-              </Select>
-            </FormControl>
-            <FormControl marginBottom={5} id="startTime" isRequired>
-              <FormLabel>Ngày thi</FormLabel>
-              <Input type="date" />
-            </FormControl>
-            <FormControl marginBottom={5} id="startTime" isRequired>
-              <FormLabel>Thời gian bắt đầu</FormLabel>
-              <Input type="time" />
-            </FormControl>
-            <FormControl marginBottom={5} id="endTime" isRequired>
-              <FormLabel>Thời gian kết thúc</FormLabel>
-              <Input type="time" />
-            </FormControl>
-            <Flex mt={5}>
-              <Button colorScheme="blue">Tạo mới</Button>
-              <Spacer />
-            </Flex>
+            <form onSubmit={(e) => handleCreateExamSlot(e)}>
+              <FormControl marginBottom={5} id="courseID" isRequired>
+                <FormLabel>Course</FormLabel>
+                <Select
+                  placeholder="Lựa chọn Course"
+                  id="courseID"
+                  value={formData.courseID}
+                  onChange={handleInputChange}
+                >
+                  {!loadingCourse && course.map((item) => (
+                    <option key={item.ID} value={item.ID}>
+                      {item.name}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl marginBottom={5} id="code" isRequired>
+                <FormLabel>Mã ca thi</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Ví dụ: JS1701"
+                  id="code"
+                  value={formData.code}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="date" isRequired>
+                <FormLabel>Ngày thi</FormLabel>
+                <Input
+                  type="date"
+                  id="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="startTime" isRequired>
+                <FormLabel>Thời gian bắt đầu</FormLabel>
+                <Input
+                  type="time"
+                  id="startTime"
+                  value={formData.startTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="endTime" isRequired>
+                <FormLabel>Thời gian kết thúc</FormLabel>
+                <Input
+                  type="time"
+                  id="endTime"
+                  value={formData.endTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <Flex mt={5}>
+                <Button colorScheme="blue" type="submit">
+                  Tạo mới
+                </Button>
+                <Spacer />
+              </Flex>
+            </form>
           </DrawerBody>
         </DrawerContent>
       </Drawer>

@@ -19,6 +19,10 @@ import BgSignUp from "assets/img/BgFPT.jpg";
 import React from "react";
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
 
+import { useUser } from '../../components/share/UserContext';
+import { useState } from "react";
+import { useHistory } from 'react-router-dom';
+
 function SignUp() {
   const bgForm = useColorModeValue("white", "navy.800");
   const titleColor = useColorModeValue("gray.700", "blue.500");
@@ -26,6 +30,65 @@ function SignUp() {
   const colorIcons = useColorModeValue("gray.700", "white");
   const bgIcons = useColorModeValue("trasnparent", "navy.700");
   const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
+
+  const history = useHistory();
+  const { user, login, logout, flag, setFlag } = useUser();
+  const [name, setName] = useState("");
+
+  const sendLoginToServer = async (e) => {
+    e.preventDefault();
+    const email = e.target.name.value
+    console.log(email)
+    try {
+      const response = await fetch('https://swp3191.onrender.com/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({email: email}),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        // Handle the response as needed
+        login(responseData.userInfo)
+        setFlag(!flag);
+        handleRedirect(responseData.userInfo[0]);
+      } else {
+        console.error('POST request failed:', response.statusText);
+        // Handle the error as needed
+      }
+    } catch (error) {
+      console.error('POST request error:', error);
+      // Handle any network or fetch errors
+    }
+  };
+
+  // Xử lý phân trang cho từng role
+  function handleRedirect(user) {
+    switch (user.Role.trim()) {
+      case 'Admin':
+        history.push('/admin');
+        break;
+      case 'Testing Admin':
+        history.push('/admin');
+        break;
+      case 'Testing Staff':
+        history.push('/');
+        break;
+      case 'Lecturer':
+        history.push('/');
+        break;
+      case 'Student':
+        history.push('/');
+        break;
+      default:
+        history.push('/auth');
+        break;
+    }
+  }
+  
+
   return (
     <Flex
       direction="column"
@@ -173,48 +236,55 @@ function SignUp() {
           >
             hoặc
           </Text>
-          <FormControl>
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Tên tài khoản
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="text"
-              placeholder="Mời bạn nhập tên tài khoản"
-              mb="24px"
-              size="lg"
-            />
-            <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
-              Mật khẩu
-            </FormLabel>
-            <Input
-              variant="auth"
-              fontSize="sm"
-              ms="4px"
-              type="password"
-              placeholder="Mời bạn nhập mật khẩu"
-              mb="24px"
-              size="lg"
-            />
-            <FormControl display="flex" alignItems="center" mb="24px">
-              <Switch id="remember-login" colorScheme="blue" me="10px" />
-              <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
-                Ghi nhớ mật khẩu
+          <form onSubmit={(e) => sendLoginToServer(e)}>
+            <FormControl>
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                Tên tài khoản
               </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type="text"
+                placeholder="Mời bạn nhập tên tài khoản"
+                mb="24px"
+                size="lg"
+                name="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
+                Mật khẩu
+              </FormLabel>
+              <Input
+                variant="auth"
+                fontSize="sm"
+                ms="4px"
+                type="password"
+                placeholder="Mời bạn nhập mật khẩu"
+                mb="24px"
+                size="lg"
+              />
+              <FormControl display="flex" alignItems="center" mb="24px">
+                <Switch id="remember-login" colorScheme="blue" me="10px" />
+                <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
+                  Ghi nhớ mật khẩu
+                </FormLabel>
+              </FormControl>
+              <Button
+                fontSize="13px"
+                variant="dark"
+                fontWeight="bold"
+                w="100%"
+                h="45"
+                mb="24px"
+                type="submit"
+              >
+                ĐĂNG NHẬP
+              </Button>
             </FormControl>
-            <Button
-              fontSize="13px"
-              variant="dark"
-              fontWeight="bold"
-              w="100%"
-              h="45"
-              mb="24px"
-            >
-              ĐĂNG NHẬP
-            </Button>
-          </FormControl>
+          </form>
+
           <Flex
             flexDirection="column"
             justifyContent="center"
