@@ -10,12 +10,12 @@ export const ExamRoomProvider = ({ children }) => {
   const [subjectName, setSubjectName] = useState("");
   const [examSlotID, setExamSlotID] = useState("");
   const [loading, setLoading] = useState(true);
-  const { flag } = useUser();
+  const { flag, URL } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swp3191.onrender.com/examRoom', {
+        const response = await axios.get(`${URL}/examRoom`, {
           withCredentials: true, 
         });
         setExamRoom(response?.data?.result);

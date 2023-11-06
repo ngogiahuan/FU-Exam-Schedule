@@ -13,6 +13,7 @@ import {
   Text,
   useColorMode,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 // Custom Icons
 import {
@@ -21,16 +22,18 @@ import {
   ChakraLogoDark,
   ChakraLogoLight,
   ProfileIcon,
-  SettingsIcon,
 } from "components/Icons/Icons";
 // Custom Components
 import { ItemContent } from "components/Menu/ItemContent";
 import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import React from "react";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { useUser } from "../../components/share/UserContext";
 import routes from "routes.js";
-
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 export default function HeaderLinks(props) {
   const {
     variant,
@@ -42,8 +45,9 @@ export default function HeaderLinks(props) {
     ...rest
   } = props;
 
+  const toast = useToast();
+  const { user, login, logout, flag, setFlag } = useUser();
   const { colorMode } = useColorMode();
-
   // Chakra Color Mode
   let navbarIcon =
     fixed && scrolled
@@ -61,31 +65,44 @@ export default function HeaderLinks(props) {
       flexDirection="row"
     >
       <SearchBar me="18px" />
-      <NavLink to="/auth/signin">
-        <Button
-          ms="0px"
-          px="0px"
-          me={{ sm: "2px", md: "16px" }}
-          color={navbarIcon}
-          variant="no-effects"
-          rightIcon={
-            document.documentElement.dir ? (
-              ""
-            ) : (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            )
-          }
-          leftIcon={
-            document.documentElement.dir ? (
-              <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
-            ) : (
-              ""
-            )
-          }
-        >
-          <Text display={{ sm: "none", md: "flex" }}>Đăng nhập</Text>
-        </Button>
-      </NavLink>
+      {localStorage.getItem("isLogin") === "true" && (
+        <Link to="/auth/signin">
+          <Button
+            ms="0px"
+            px="0px"
+            me={{ sm: "2px", md: "16px" }}
+            color={navbarIcon}
+            variant="no-effects"
+            onClick={() => {
+              logout();
+              toast({
+                status: "success",
+                position: "top",
+                duration: "5000",
+                isClosable: true,
+                title: "Đăng xuất",
+                description: "Bạn đăng xuất thành công",
+              });
+            }}
+            rightIcon={
+              document.documentElement.dir ? (
+                ""
+              ) : (
+                <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+              )
+            }
+            leftIcon={
+              document.documentElement.dir ? (
+                <ProfileIcon color={navbarIcon} w="22px" h="22px" me="0px" />
+              ) : (
+                ""
+              )
+            }
+          >
+            <Text display={{ sm: "none", md: "flex" }}>Đăng xuất</Text>
+          </Button>
+        </Link>
+      )}
       <SidebarResponsive
         hamburgerColor={"white"}
         logo={
@@ -112,15 +129,6 @@ export default function HeaderLinks(props) {
         routes={routes}
         {...rest}
       />
-      {/* <SettingsIcon
-        cursor="pointer"
-        ms={{ base: "16px", xl: "0px" }}
-        me="16px"
-        onClick={props.onOpen}
-        color={navbarIcon}
-        w="18px"
-        h="18px"
-      /> */}
     </Flex>
   );
 }

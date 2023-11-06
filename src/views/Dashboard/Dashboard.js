@@ -18,6 +18,7 @@ import {
   Tr,
   useColorMode,
   useColorModeValue,
+  useToast,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -31,7 +32,8 @@ import {
   GlobeIcon,
   WalletIcon,
 } from "components/Icons/Icons.js";
-import React from "react";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
+import React, { useEffect } from "react";
 // Variables
 import {
   barChartData,
@@ -40,8 +42,24 @@ import {
   lineChartOptions,
 } from "variables/charts";
 import { pageVisits, socialTraffic } from "variables/general";
+import { useHistory } from "react-router-dom";
 
 export default function Dashboard() {
+  let history = useHistory();
+  const toast = useToast();
+  useEffect(() => {
+    if (!localStorage.getItem("isLogin")) {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
+      });
+      return history.push("/auth/signin");
+    }
+  }, []);
   // Chakra Color Mode
   const iconBlue = useColorModeValue("blue.500", "blue.500");
   const iconBoxInside = useColorModeValue("white", "white");

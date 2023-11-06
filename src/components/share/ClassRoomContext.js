@@ -7,12 +7,12 @@ const ClassRoomContext = createContext();
 export const ClassRoomProvider = ({ children }) => {
   const [classRoom, setClassRoom] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { flag } = useUser();
+  const { flag, URL } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swp3191.onrender.com/classroom', {
+        const response = await axios.get(`${URL}/classroom`, {
           withCredentials: true, 
         });
         setClassRoom(response?.data?.result);

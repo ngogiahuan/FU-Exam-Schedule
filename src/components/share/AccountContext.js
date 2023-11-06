@@ -7,12 +7,12 @@ const AccountContext = createContext();
 export const AccountProvider = ({ children }) => {
   const [account, setAccount] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { flag } = useUser();
+  const { flag, URL } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swp3191.onrender.com/auth/get-account', {
+        const response = await axios.get(`${URL}/auth/get-account`, {
           withCredentials: true, 
         });
         setAccount(response?.data?.result);

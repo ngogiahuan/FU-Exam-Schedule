@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react";
 // Assets
 import signInImage from "assets/img/370564239_632562499010395_4148232596381870373_n.jpg";
-import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+import { NavLink } from "react-router-dom/cjs/react-router-dom";
 
 function SignIn() {
   // Chakra color mode
@@ -28,7 +28,7 @@ function SignIn() {
   const bgIcons = useColorModeValue("trasnparent", "navy.700");
   const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
   return (
-    <Flex position="relative" height={"100%"}>
+    <Flex position="relative" height={"100vh"}>
       <Flex
         w="100%"
         maxW="1044px"
@@ -43,7 +43,6 @@ function SignIn() {
           alignItems="center"
           justifyContent="center"
           mb="60px"
-          // mt={{ base: "50px", md: "20px" }}
         >
           <Flex
             zIndex="2"
@@ -67,81 +66,7 @@ function SignIn() {
               textAlign="center"
               mb="22px"
             >
-              Đăng kí qua
-            </Text>
-            <HStack spacing="15px" justify="center" mb="22px">
-              <Flex
-                justify="center"
-                align="center"
-                w="75px"
-                h="75px"
-                borderRadius="8px"
-                border={useColorModeValue("1px solid", "0px")}
-                borderColor="gray.200"
-                cursor="pointer"
-                transition="all .25s ease"
-                bg={bgIcons}
-                _hover={{ bg: bgIconsHover }}
-              >
-                <Link href="#">
-                  <Icon as={FaFacebook} color={colorIcons} w="30px" h="30px" />
-                </Link>
-              </Flex>
-              <Flex
-                justify="center"
-                align="center"
-                w="75px"
-                h="75px"
-                borderRadius="8px"
-                border={useColorModeValue("1px solid", "0px")}
-                borderColor="gray.200"
-                cursor="pointer"
-                transition="all .25s ease"
-                bg={bgIcons}
-                _hover={{ bg: bgIconsHover }}
-              >
-                <Link href="#">
-                  <Icon
-                    as={FaApple}
-                    color={colorIcons}
-                    w="30px"
-                    h="30px"
-                    _hover={{ filter: "brightness(120%)" }}
-                  />
-                </Link>
-              </Flex>
-              <Flex
-                justify="center"
-                align="center"
-                w="75px"
-                h="75px"
-                borderRadius="8px"
-                border={useColorModeValue("1px solid", "0px")}
-                borderColor="gray.200"
-                cursor="pointer"
-                transition="all .25s ease"
-                bg={bgIcons}
-                _hover={{ bg: bgIconsHover }}
-              >
-                <Link href="#">
-                  <Icon
-                    as={FaGoogle}
-                    color={colorIcons}
-                    w="30px"
-                    h="30px"
-                    _hover={{ filter: "brightness(120%)" }}
-                  />
-                </Link>
-              </Flex>
-            </HStack>
-            <Text
-              fontSize="lg"
-              color="gray.400"
-              fontWeight="bold"
-              textAlign="center"
-              mb="22px"
-            >
-              hoặc
+              Đăng kí tài khoản
             </Text>
             <FormControl>
               <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
@@ -183,7 +108,12 @@ function SignIn() {
               />
               {/* Nhập lại mật khẩu */}
               <FormControl display="flex" alignItems="center" mb="24px">
-                <Switch id="remember-login" colorScheme="blue" me="10px" />
+                <Switch
+                  required
+                  id="remember-login"
+                  colorScheme="blue"
+                  me="10px"
+                />
                 <FormLabel htmlFor="remember-login" mb="0" fontWeight="normal">
                   Xác nhận đăng kí tài khoản
                 </FormLabel>
@@ -207,16 +137,12 @@ function SignIn() {
               mt="0px"
             >
               <Text color={textColor} fontWeight="medium">
-                Bạn đã có tài khoản?
-                <Link
-                  color={titleColor}
-                  as="span"
-                  ms="5px"
-                  href="#"
-                  fontWeight="bold"
-                >
-                  Đăng nhập ngay
-                </Link>
+                Bạn đã có tài khoản?{" "}
+                <NavLink to="/auth/signin">
+                  <Text color={titleColor} as="span" href="#" fontWeight="bold">
+                    Đăng nhập ngay
+                  </Text>
+                </NavLink>
               </Text>
             </Flex>
           </Flex>

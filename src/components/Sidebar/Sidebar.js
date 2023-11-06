@@ -247,7 +247,7 @@ function Sidebar(props) {
         </Heading>
       </Stack>
       <Heading marginLeft={"20%"} marginTop={"10%"} as="h6" size="xs">
-        Chào, Ngô Gia Huấn
+        Chào, {localStorage.getItem("username")}
       </Heading>
       <HSeparator my="26px" />
     </Box>

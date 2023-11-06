@@ -7,12 +7,12 @@ const ExaminerContext = createContext();
 export const ExaminerProvider = ({ children }) => {
   const [examiner, setExaminer] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { flag } = useUser();
+  const { flag, URL } = useUser();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://swp3191.onrender.com/examiner', {
+        const response = await axios.get(`${URL}/examiner`, {
           withCredentials: true, 
         });
         setExaminer(response?.data?.result);
