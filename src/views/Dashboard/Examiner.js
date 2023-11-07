@@ -47,7 +47,6 @@ import { GET_ALL_EXAMNIER } from "assets/api";
 import { useHistory } from "react-router-dom";
 
 function Examiner() {
-  //
   const history = useHistory();
   const toast = useToast();
   const { user, login, logout, flag, setFlag } = useUser();
@@ -73,19 +72,17 @@ function Examiner() {
   // DataExaminer
   const [dataExaminer, setDataExaminer] = useState([]);
   useEffect(() => {
-    useEffect(() => {
-      if (!localStorage.getItem("isLogin")) {
-        toast({
-          status: "error",
-          position: "top",
-          duration: "5000",
-          isClosable: true,
-          title: "Đăng nhập",
-          description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
-        });
-        return history.push("/auth/signin");
-      }
-    }, []);
+    if (!localStorage.getItem("isLogin")) {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
+      });
+      return history.push("/auth/signin");
+    }
     const getAllExaminer = async () => {
       try {
         const { url, options } = GET_ALL_EXAMNIER();
