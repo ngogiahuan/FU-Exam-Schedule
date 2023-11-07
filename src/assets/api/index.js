@@ -45,3 +45,22 @@ export function REGISTER_EXAM_SCHEDULE(body) {
     body: JSON.stringify(body),
   };
 }
+
+export function DELETE_EXAMSLOT_BY_ID(id) {
+  return {
+    url: `${API_URL}examSlot/${id}`,
+    options: {
+      method: "DELETE",
+    },
+  };
+}
+
+// API EXPORT FILE EXCEL
+export function EXPORT_FILE_EXCEL() {
+  return {
+    url: `${API_URL}api/excel/depart-examiner/download`,
+    options: {
+      method: "GET",
+    },
+  };
+}

@@ -47,6 +47,7 @@ import { useUser } from "../../components/share/UserContext";
 import { useExamSchedule } from "../../components/share/ExamScheduleContext";
 import { useCourse } from "../../components/share/CourseContext";
 import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { DELETE_EXAMSLOT_BY_ID } from "assets/api";
 
 function Billing() {
   const history = useHistory();
@@ -211,6 +212,56 @@ function Billing() {
     }
   };
 
+  // Call API delete Exam Slot
+  const deleteExamSlotByExamSlotId = async (id) => {
+    if (localStorage.getItem("role").trim() === "Admin") {
+      const { url, options } = DELETE_EXAMSLOT_BY_ID(id);
+      const response = await fetch(url, options);
+      const json = await response.json();
+      console.log(json);
+      if (json && json.isSuccess === true) {
+        toast({
+          status: "success",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Ca thi",
+          description: "Bạn đã xóa ca thi thành công",
+        });
+        setFlag(!flag);
+      } else {
+        toast({
+          status: "error",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Ca thi",
+          description:
+            "Bạn không xóa được ca thi, do ca thi đã được đăng kí phòng thi",
+        });
+      }
+      try {
+      } catch (error) {
+        toast({
+          status: "error",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Hệ thống",
+          description: "Hệ thống đang gặp lỗi, mời bạn thử lại sau",
+        });
+      }
+    } else {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Phân quyền",
+        description: "Bạn không phải là Admin nên sẽ không được xóa ca thi này",
+      });
+    }
+  };
   return (
     <>
       <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
@@ -218,7 +269,7 @@ function Billing() {
           <CardHeader p="6px 0px 22px 0px" flexWrap>
             <Flex>
               <Text fontSize="xl" color={textColor} fontWeight="bold">
-                Danh sách phòng thi
+                Danh sách ca thi
               </Text>
               <Spacer />
               <ButtonGroup>
@@ -259,132 +310,135 @@ function Billing() {
               <Tbody>
                 {!loadingExamSlot &&
                   examSlot.map((row, index, arr) => {
-                    return (
-                      <Tr>
-                        {/* ID */}
-                        <Td
-                          pl="0px"
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Flex
-                            align="center"
-                            py=".8rem"
-                            minWidth="100%"
-                            flexWrap="nowrap"
+                    if (row?.status === true) {
+                      return (
+                        <Tr>
+                          {/* ID */}
+                          <Td
+                            pl="0px"
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
+                          >
+                            <Flex
+                              align="center"
+                              py=".8rem"
+                              minWidth="100%"
+                              flexWrap="nowrap"
+                            >
+                              <Flex direction="column">
+                                <Text
+                                  fontSize="md"
+                                  color={titleColor}
+                                  fontWeight="bold"
+                                  minWidth="100%"
+                                >
+                                  {row.ID}
+                                </Text>
+                              </Flex>
+                            </Flex>
+                          </Td>
+                          {/* examBatchID */}
+                          <Td
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
                           >
                             <Flex direction="column">
                               <Text
                                 fontSize="md"
-                                color={titleColor}
+                                color={textColor}
                                 fontWeight="bold"
-                                minWidth="100%"
                               >
-                                {row.ID}
+                                {row.examBatchID}
                               </Text>
                             </Flex>
-                          </Flex>
-                        </Td>
-                        {/* examBatchID */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Flex direction="column">
+                          </Td>
+                          {/* startTime */}
+                          <Td
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
+                          >
+                            <Flex direction="column">
+                              <Text
+                                fontSize="md"
+                                color={textColor}
+                                fontWeight="bold"
+                              >
+                                {new Date(row.startTime).getHours() +
+                                  ":" +
+                                  new Date(row.startTime).getMinutes() +
+                                  " " +
+                                  (new Date(row.startTime).getDate() + 1) +
+                                  "/" +
+                                  (new Date(row.startTime).getMonth() + 1) +
+                                  "/" +
+                                  new Date(row.startTime).getFullYear()}
+                              </Text>
+                            </Flex>
+                          </Td>
+                          {/* endTime */}
+                          <Td
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
+                          >
                             <Text
                               fontSize="md"
                               color={textColor}
                               fontWeight="bold"
                             >
-                              {row.examBatchID}
-                            </Text>
-                          </Flex>
-                        </Td>
-                        {/* startTime */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Flex direction="column">
-                            <Text
-                              fontSize="md"
-                              color={textColor}
-                              fontWeight="bold"
-                            >
-                              {new Date(row.startTime).getHours() +
+                              {new Date(row.endTime).getHours() +
                                 ":" +
-                                new Date(row.startTime).getMinutes() +
+                                new Date(row.endTime).getMinutes() +
                                 " " +
-                                (new Date(row.startTime).getDate() + 1) +
+                                (new Date(row.endTime).getDate() + 1) +
                                 "/" +
-                                (new Date(row.startTime).getMonth() + 1) +
+                                (new Date(row.endTime).getMonth() + 1) +
                                 "/" +
-                                new Date(row.startTime).getFullYear()}
+                                new Date(row.endTime).getFullYear()}
                             </Text>
-                          </Flex>
-                        </Td>
-                        {/* endTime */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Text
-                            fontSize="md"
-                            color={textColor}
-                            fontWeight="bold"
-                          >
-                            {new Date(row.endTime).getHours() +
-                              ":" +
-                              new Date(row.endTime).getMinutes() +
-                              " " +
-                              (new Date(row.endTime).getDate() + 1) +
-                              "/" +
-                              (new Date(row.endTime).getMonth() + 1) +
-                              "/" +
-                              new Date(row.endTime).getFullYear()}
-                          </Text>
-                        </Td>
-                        {/* quantity */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Text
-                            fontSize="md"
-                            color={textColor}
-                            fontWeight="bold"
-                            pb=".5rem"
-                          >
-                            {row.quantity}
-                          </Text>
-                        </Td>
-                        {/* Edit */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Button
-                            disabled={row.quantity > 1}
-                            onClick={() => {
-                              openSecondDrawer();
-                              getInfoByExamSlot(row.ID);
-                            }}
-                            p="0px"
-                            bg="transparent"
-                            variant="no-effects"
+                          </Td>
+                          {/* quantity */}
+                          <Td
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
                           >
                             <Text
                               fontSize="md"
-                              color="blue.400"
+                              color={textColor}
                               fontWeight="bold"
-                              cursor="pointer"
+                              pb=".5rem"
                             >
-                              Tạo phòng thi
+                              {row.quantity}
                             </Text>
-                          </Button>
-                        </Td>
-                      </Tr>
-                    );
+                          </Td>
+                          {/* Edit */}
+                          <Td
+                            borderColor={borderColor}
+                            borderBottom={index ? "none" : null}
+                          >
+                            <ButtonGroup>
+                              <Button
+                                colorScheme="green"
+                                disabled={row.quantity > 1}
+                                onClick={() => {
+                                  openSecondDrawer();
+                                  getInfoByExamSlot(row.ID);
+                                }}
+                              >
+                                Tạo phòng thi
+                              </Button>
+                              <Button
+                                colorScheme="red"
+                                onClick={() =>
+                                  deleteExamSlotByExamSlotId(row.ID)
+                                }
+                              >
+                                Xóa ca thi
+                              </Button>
+                            </ButtonGroup>
+                          </Td>
+                        </Tr>
+                      );
+                    }
                   })}
               </Tbody>
             </Table>

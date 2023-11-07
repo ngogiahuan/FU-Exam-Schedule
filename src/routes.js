@@ -8,12 +8,12 @@ import ExamSlot from "views/Dashboard/ExamSlot.js";
 import SignIn from "views/Pages/SignIn.js";
 import SignUp from "views/Pages/SignUp.js";
 import { HomeIcon, StatsIcon, PersonIcon } from "components/Icons/Icons";
-import { CalendarIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { CalendarIcon, HamburgerIcon, ViewIcon } from "@chakra-ui/icons";
 import Examiner from "views/Dashboard/Examiner";
 import TableRegister from "views/Examiner/TableRegister.js";
 var dashRoutes = [
   {
-    name: "Dashboard",
+    name: "Quản lí",
     category: "account",
     state: "pageCollapse",
     views: [
@@ -42,17 +42,17 @@ var dashRoutes = [
     state: "pageCollapse",
     views: [
       {
-        path: "/calendar",
-        name: "Danh sách lịch thi",
-        icon: <CalendarIcon color="inherit" />,
-        component: Calendar,
-        layout: "/admin",
-      },
-      {
         path: "/examSlot",
         name: "Danh sách Ca thi",
         icon: <CalendarIcon color="inherit" />,
         component: ExamSlot,
+        layout: "/admin",
+      },
+      {
+        path: "/calendar",
+        name: "Danh sách lịch thi",
+        icon: <CalendarIcon color="inherit" />,
+        component: Calendar,
         layout: "/admin",
       },
       {
@@ -84,6 +84,13 @@ var dashRoutes = [
     category: "account",
     state: "pageCollapse",
     views: [
+      {
+        path: "/getSalary",
+        name: "Bảng lương cá nhân",
+        icon: <ViewIcon color="inherit" />,
+        // component: SignUp,
+        layout: "/auth",
+      },
       // {
       //   path: "/profile",
       //   name: "Thông tin cá nhân",
