@@ -47,6 +47,19 @@ import { useExamRoom } from "../../components/share/ExamRoomContext";
 import { useUser } from "../../components/share/UserContext";
 
 function Billing() {
+  useEffect(() => {
+    if (!localStorage.getItem("isLogin")) {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
+      });
+      return history.push("/auth/signin");
+    }
+  }, []);
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");

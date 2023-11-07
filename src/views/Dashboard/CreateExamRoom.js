@@ -36,8 +36,23 @@ import { useExamRoom } from "../../components/share/ExamRoomContext";
 import { useClassRoom } from "../../components/share/ClassRoomContext";
 import { useExaminer } from "../../components/share/ExaminerContext";
 import { useUser } from "components/share/UserContext";
+import { useHistory } from "react-router-dom";
 
 function ExamRoom() {
+  const history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("isLogin")) {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
+      });
+      return history.push("/auth/signin");
+    }
+  }, []);
   const [isAddStudentrOpen, setIsAddStudentrOpen] = useState(false);
   const [isAddStudentExcelOpen, setIsAddStudentExcelOpen] = useState(false);
 

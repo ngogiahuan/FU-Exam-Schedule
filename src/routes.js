@@ -10,6 +10,7 @@ import SignUp from "views/Pages/SignUp.js";
 import { HomeIcon, StatsIcon, PersonIcon } from "components/Icons/Icons";
 import { CalendarIcon, HamburgerIcon } from "@chakra-ui/icons";
 import Examiner from "views/Dashboard/Examiner";
+import TableRegister from "views/Examiner/TableRegister.js";
 var dashRoutes = [
   {
     name: "Dashboard",
@@ -28,8 +29,8 @@ var dashRoutes = [
         path: "/registerExamSlot",
         name: "Đăng kí lịch coi thi",
         icon: <CalendarIcon color="inherit" />,
-        component: Examiner,
-        layout: "/examiner",
+        component: TableRegister,
+        layout: "/admin",
       },
     ],
   },

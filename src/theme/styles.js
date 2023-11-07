@@ -83,14 +83,14 @@ export const globalStyles = {
       body: {
         overflowX: "hidden",
         bg: mode("secondaryGray.300", "navy.900")(props),
-        fontFamily: "Times New Roman",
-        letterSpacing: "-0.5px",
+        fontFamily: "Inter,sans-serif",
+        letterSpacing: "-0.8px",
       },
       input: {
         color: "gray.700",
       },
       html: {
-        fontFamily: "Times New Roman",
+        fontFamily: "Inter,sans-serif",
       },
     }),
   },

@@ -16,8 +16,8 @@ import CardHeader from "components/Card/CardHeader.js";
 import TablesTableRow from "components/Tables/TablesTableRow";
 import React from "react";
 import { tablesTableData } from "variables/general";
-import { useAccount } from '../../components/share/AccountContext';
-import { useUser } from '../../components/share/UserContext';
+import { useAccount } from "../../components/share/AccountContext";
+import { useUser } from "../../components/share/UserContext";
 
 function Tables() {
   const textColor = useColorModeValue("gray.700", "white");

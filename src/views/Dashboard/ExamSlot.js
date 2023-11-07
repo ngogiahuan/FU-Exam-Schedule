@@ -46,8 +46,23 @@ import { useExamRoom } from "../../components/share/ExamRoomContext";
 import { useUser } from "../../components/share/UserContext";
 import { useExamSchedule } from "../../components/share/ExamScheduleContext";
 import { useCourse } from "../../components/share/CourseContext";
+import { useHistory } from "react-router-dom/cjs/react-router-dom";
 
 function Billing() {
+  const history = useHistory();
+  useEffect(() => {
+    if (!localStorage.getItem("isLogin")) {
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
+      });
+      return history.push("/auth/signin");
+    }
+  }, []);
   //
   const [isFirstDrawerOpen, setIsFirstDrawerOpen] = useState(false);
   const [isSecondDrawerOpen, setIsSecondDrawerOpen] = useState(false);

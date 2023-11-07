@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useUser } from './UserContext';
-import axios from 'axios';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useUser } from "./UserContext";
+import axios from "axios";
 
 const AccountContext = createContext();
 
@@ -13,12 +13,12 @@ export const AccountProvider = ({ children }) => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${URL}/auth/get-account`, {
-          withCredentials: true, 
+          withCredentials: true,
         });
         setAccount(response?.data?.result);
         setLoading(false);
       } catch (error) {
-        console.error('Error:', error);
+        console.error("Error:", error);
         setLoading(false);
       }
     };
@@ -36,7 +36,7 @@ export const AccountProvider = ({ children }) => {
 export const useAccount = () => {
   const context = useContext(AccountContext);
   if (!context) {
-    throw new Error('useAccount must be used within an AccountContextProvider');
+    throw new Error("useAccount must be used within an AccountContextProvider");
   }
   return context;
 };

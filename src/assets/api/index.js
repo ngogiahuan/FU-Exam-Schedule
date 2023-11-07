@@ -16,3 +16,32 @@ export function GET_ALL_EXAMNIER() {
     },
   };
 }
+
+export function LOGIN_API(mail) {
+  return {
+    url: `${API_URL}auth/login`,
+    options: {
+      method: "POST",
+    },
+    body: JSON.stringify(mail),
+  };
+}
+
+export function GET_ALL_EXAM_SCHEDULE() {
+  return {
+    url: `${API_URL}exam-schedule`,
+    options: {
+      method: "GET",
+    },
+  };
+}
+
+export function REGISTER_EXAM_SCHEDULE(body) {
+  return {
+    url: `${API_URL}register`,
+    options: {
+      method: "POST",
+    },
+    body: JSON.stringify(body),
+  };
+}

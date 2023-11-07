@@ -13,8 +13,7 @@ import {
   Center,
   useToast,
 } from "@chakra-ui/react";
-import * as jwtDecode from "jwt-decode";
-import googleOneTap from "google-one-tap";
+import jwtDecode from "jwt-decode";
 
 // Assets
 import BgSignUp from "assets/img/BgFPT.jpg";
@@ -26,14 +25,7 @@ import { useHistory } from "react-router-dom";
 // FORM LOGIN GG
 import { FcGoogle } from "react-icons/fc";
 import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
-
-const options = {
-  client_id:
-    "248305583189-gi11o6gn6552ctrve0eqlfj83l9sm90c.apps.googleusercontent.com", // required
-  auto_select: false, // optional
-  cancel_on_tap_outside: false, // optional
-  context: "signin", // optional
-};
+import { LOGIN_API } from "assets/api";
 
 function SignUp() {
   const bgForm = useColorModeValue("white", "navy.800");
@@ -51,31 +43,7 @@ function SignUp() {
       : null
   );
 
-  const LoginGoogle = () => {
-    setPopupLogin(!popupLogin);
-  };
-
   useEffect(() => {
-    // if (!loginData) {
-    //   console.log("LOGIN");
-    //   googleOneTap(options, async (response) => {
-    //     console.log(response);
-    //     const res = await fetch(`${URL}/api/google-login`, {
-    //       method: "POST",
-    //       body: JSON.stringify({
-    //         token: response.credential,
-    //       }),
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //     });
-
-    //     const data = await res.json();
-    //     setLoginData(data);
-    //     console.log(data.email);
-    //     handleAuthorizeAccount(data);
-    //   });
-    // }
     /* global google*/
     window.onload = function () {
       google.accounts.id.initialize({
@@ -87,74 +55,59 @@ function SignUp() {
         document.getElementById("buttonDiv"),
         { theme: "outline", size: "large" } // customization attributes
       );
-      google.accounts.id.prompt(); // also display the One Tap dialog
     };
   }, [loginData]);
 
-  const handleCredentialResponse = (response) => {
+  const handleCredentialResponse = async (response) => {
     console.log("Encoded JWT ID token: " + response.credential);
-    console.log(jwtDecode(response.credential));
-
-    // checkUserIsSignedIn(decoded);
-  };
-
-  //set localStorage with ID of user are found
-
-  function checkUserIsSignedIn(decodedObj) {
-    console.log(decodedObj.email);
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem("loginData");
-    setLoginData(null);
-  };
-
-  const handleAuthorizeAccount = async (data) => {
-    try {
-      const response = await fetch(`${URL}/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: data.email }),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        let dataUser = {
-          name: data.name,
-          picture: data.picture,
-          email: data.email,
-          Role: responseData?.userInfo[0].Role,
-          ID: responseData?.userInfo[0].ID,
-        };
-        login(dataUser);
-        setFlag(!flag);
-        // localStorage.setItem("loginData", JSON.stringify(dataUser));
-        handleRedirect(responseData.userInfo[0]);
+    const decoded = jwtDecode(response.credential);
+    console.log(decoded);
+    if (decoded) {
+      try {
+        const { url, options } = LOGIN_API(decoded?.mail);
+        const response = await fetch(url, options);
+        const json = await response.json();
+        if (json.ok) {
+          let dataUser = {
+            name: decoded?.name,
+            picture: decoded?.picture,
+            email: decoded?.email,
+            Role: json?.userInfo[0].Role,
+            ID: json?.userInfo[0].ID,
+          };
+          login(dataUser);
+          setFlag(!flag);
+          handleRedirect(json?.userInfo[0]);
+          toast({
+            status: "success",
+            position: "top",
+            duration: "5000",
+            isClosable: true,
+            title: "Đăng nhập",
+            description: "Bạn nhập thành công",
+          });
+        } else {
+          toast({
+            status: "error",
+            position: "top",
+            duration: "5000",
+            isClosable: true,
+            title: "Đăng nhập",
+            description: "Bạn nhập không thành công",
+          });
+        }
+      } catch (error) {
+        console.error("POST request error:", error);
+        // Handle any network or fetch errors
         toast({
-          status: "success",
+          status: "error",
           position: "top",
           duration: "5000",
           isClosable: true,
           title: "Đăng nhập",
-          description: "Bạn nhập  thành côcng",
+          description: "Bạn nhập không thành công",
         });
-      } else {
-        console.error("POST request failed:", response.statusText);
-        // Handle the error as needed
       }
-    } catch (error) {
-      console.error("POST request error:", error);
-      // Handle any network or fetch errors
-      toast({
-        status: "error",
-        position: "top",
-        duration: "5000",
-        isClosable: true,
-        title: "Đăng nhập",
-        description: "Bạn nhập không thành công",
-      });
     }
   };
 
@@ -177,6 +130,14 @@ function SignUp() {
         login(responseData.userInfo[0]);
         setFlag(!flag);
         handleRedirect(responseData.userInfo[0]);
+        toast({
+          status: "success",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Đăng nhập",
+          description: "Bạn nhập thành công",
+        });
       } else {
         console.error("POST request failed:", response.statusText);
         // Handle the error as needed
@@ -184,6 +145,14 @@ function SignUp() {
     } catch (error) {
       console.error("POST request error:", error);
       // Handle any network or fetch errors
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Đăng nhập",
+        description: "Bạn nhập không thành công",
+      });
     }
   };
 

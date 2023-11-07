@@ -20,7 +20,7 @@ import { ExamSlotProvider } from "./components/share/ExamSlotContext";
 import { ClassRoomProvider } from "./components/share/ClassRoomContext";
 import { ExaminerProvider } from "components/share/ExaminerContext";
 import { AccountProvider } from "components/share/AccountContext";
-import ExaminerLayout from "layouts/Examiner";
+import ExaminerLayout from "layouts/Auth.js";
 import theme from "theme/theme.js";
 
 ReactDOM.render(
