@@ -8,7 +8,7 @@ export default function App() {
   const [url, setUrl] = useState("");
   const [loginStatus, setLoginStatus] = useState(false);
 
-  const responseGoogle = response => {
+  const responseGoogle = (response) => {
     console.log(response);
     setName(response.profileObj.name);
     setEmail(response.profileObj.email);
@@ -16,7 +16,6 @@ export default function App() {
     setLoginStatus(true);
   };
   const logout = () => {
-    console.log("logout");
     setLoginStatus(false);
   };
   return (

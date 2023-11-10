@@ -9,12 +9,12 @@ const ExamScheduleContext = createContext();
 export const ExamScheduleProvider = ({ children }) => {
   const [examSchedule, setExamSchedule] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { flag } = useUser();
+  const { flag, URL } = useUser();
 
   useEffect(() => {
     const fetchExamScheduleData = async () => {
       try {
-        const response = await axios.get('https://swp3191.onrender.com/exam-schedule', {
+        const response = await axios.get(`${URL}/exam-schedule`, {
           withCredentials: true,
         });
         setExamSchedule(response?.data?.result);
