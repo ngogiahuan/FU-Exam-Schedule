@@ -18,7 +18,6 @@ import {
   Tr,
   useColorMode,
   useColorModeValue,
-  useToast,
 } from "@chakra-ui/react";
 // Custom components
 import Card from "components/Card/Card.js";
@@ -32,8 +31,7 @@ import {
   GlobeIcon,
   WalletIcon,
 } from "components/Icons/Icons.js";
-import { Redirect } from "react-router-dom/cjs/react-router-dom";
-import React, { useEffect } from "react";
+import React from "react";
 // Variables
 import {
   barChartData,
@@ -42,25 +40,8 @@ import {
   lineChartOptions,
 } from "variables/charts";
 import { pageVisits, socialTraffic } from "variables/general";
-import { useHistory } from "react-router-dom";
-import { DownloadIcon } from "@chakra-ui/icons";
-import { EXPORT_FILE_EXCEL } from "assets/api";
+
 export default function Dashboard() {
-  let history = useHistory();
-  const toast = useToast();
-  useEffect(() => {
-    if (!localStorage.getItem("isLogin")) {
-      toast({
-        status: "error",
-        position: "top",
-        duration: "5000",
-        isClosable: true,
-        title: "Đăng nhập",
-        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
-      });
-      return history.push("/auth/signin");
-    }
-  }, []);
   // Chakra Color Mode
   const iconBlue = useColorModeValue("blue.500", "blue.500");
   const iconBoxInside = useColorModeValue("white", "white");
@@ -71,45 +52,9 @@ export default function Dashboard() {
 
   const { colorMode } = useColorMode();
 
-  // CALL API FUNCTION EXPORT FILE EXCEL
-  const exportFileExcel = async () => {
-    try {
-      const { url, options } = EXPORT_FILE_EXCEL();
-      const response = await fetch(url, options);
-      const json = await response.json();
-      if (json) {
-        toast({
-          status: "success",
-          position: "top",
-          duration: "5000",
-          isClosable: true,
-          title: "Xuất File Excel",
-          description: "Bạn đã tải thành công",
-        });
-      } else {
-        toast({
-          status: "error",
-          position: "top",
-          duration: "5000",
-          isClosable: true,
-          title: "Xuất File Excel",
-          description: "Bạn tải file xuống không thành công",
-        });
-      }
-    } catch (error) {
-      toast({
-        status: "error",
-        position: "top",
-        duration: "5000",
-        isClosable: true,
-        title: "Xuất File Excel",
-        description: "Bạn tải file xuống không thành công, mời bạn thử lại",
-      });
-    }
-  };
   return (
     <Flex flexDirection="column" pt={{ base: "120px", md: "75px" }}>
-      <SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing="24px" mb="20px">
+      <SimpleGrid columns={{ sm: 1, md: 2, xl: 3 }} spacing="24px" mb="20px">
         <Card minH="125px">
           <Flex direction="column">
             <Flex
@@ -234,49 +179,6 @@ export default function Dashboard() {
               </Text>
               So với kỳ trước
             </Text>
-          </Flex>
-        </Card>
-        <Card minH="125px">
-          <Flex direction="column">
-            <Flex
-              flexDirection="row"
-              align="center"
-              justify="center"
-              w="100%"
-              mb="25px"
-            >
-              <Stat me="auto">
-                <StatLabel
-                  fontSize="xs"
-                  color="gray.400"
-                  fontWeight="bold"
-                  textTransform="uppercase"
-                >
-                  Export Excel lương giám thị
-                </StatLabel>
-                <Flex>
-                  <StatNumber fontSize="lg" color={textColor} fontWeight="bold">
-                    <Button
-                      // onClick={() => exportFileExcel()}
-                      colorScheme="green"
-                    >
-                      <a href="https://swp3191.onrender.com/api/excel/depart-examiner/download">
-                        Tải xuống ngay
-                      </a>
-                    </Button>
-                  </StatNumber>
-                </Flex>
-              </Stat>
-              <IconBox
-                borderRadius="50%"
-                as="box"
-                h={"45px"}
-                w={"45px"}
-                bg={iconBlue}
-              >
-                <DownloadIcon h={"24px"} w={"24px"} color={iconBoxInside} />
-              </IconBox>
-            </Flex>
           </Flex>
         </Card>
       </SimpleGrid>

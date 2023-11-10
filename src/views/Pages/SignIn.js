@@ -5,118 +5,49 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  HStack,
   Icon,
   Input,
+  Link,
   Switch,
   Text,
   useColorModeValue,
+  LightMode,
   Center,
   useToast,
 } from "@chakra-ui/react";
-import jwtDecode from "jwt-decode";
-
 // Assets
 import BgSignUp from "assets/img/BgFPT.jpg";
 import React from "react";
+import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa";
+
 import { useUser } from "../../components/share/UserContext";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router-dom";
 
 // FORM LOGIN GG
 import { FcGoogle } from "react-icons/fc";
-import { NavLink } from "react-router-dom/cjs/react-router-dom.min";
-import { LOGIN_API } from "assets/api";
 
 function SignUp() {
   const bgForm = useColorModeValue("white", "navy.800");
   const titleColor = useColorModeValue("gray.700", "blue.500");
   const textColor = useColorModeValue("gray.700", "white");
+  const colorIcons = useColorModeValue("gray.700", "white");
+  const bgIcons = useColorModeValue("trasnparent", "navy.700");
+  const bgIconsHover = useColorModeValue("gray.50", "whiteAlpha.100");
 
   const history = useHistory();
   const toast = useToast();
-  const { user, login, logout, flag, setFlag, URL } = useUser();
+  const { user, login, logout, flag, setFlag } = useUser();
   const [name, setName] = useState("");
-  const [popupLogin, setPopupLogin] = useState(false);
-  const [loginData, setLoginData] = useState(
-    localStorage.getItem("loginData")
-      ? JSON.parse(localStorage.getItem("loginData"))
-      : null
-  );
 
-  useEffect(() => {
-    /* global google*/
-    window.onload = function () {
-      google.accounts.id.initialize({
-        client_id:
-          "12926705277-3el15gd4knio1ebid2hqhm5apj0or5c1.apps.googleusercontent.com",
-        callback: handleCredentialResponse,
-      });
-      google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" } // customization attributes
-      );
-    };
-  }, [loginData]);
-
-  const handleCredentialResponse = async (response) => {
-    console.log("Encoded JWT ID token: " + response.credential);
-    const decoded = jwtDecode(response.credential);
-    console.log(decoded);
-    if (decoded) {
-      try {
-        const { url, options } = LOGIN_API(decoded?.mail);
-        const response = await fetch(url, options);
-        const json = await response.json();
-        if (json.ok) {
-          let dataUser = {
-            name: decoded?.name,
-            picture: decoded?.picture,
-            email: decoded?.email,
-            Role: json?.userInfo[0].Role,
-            ID: json?.userInfo[0].ID,
-          };
-          login(dataUser);
-          setFlag(!flag);
-          handleRedirect(json?.userInfo[0]);
-          toast({
-            status: "success",
-            position: "top",
-            duration: "5000",
-            isClosable: true,
-            title: "Đăng nhập",
-            description: "Bạn nhập thành công",
-          });
-        } else {
-          toast({
-            status: "error",
-            position: "top",
-            duration: "5000",
-            isClosable: true,
-            title: "Đăng nhập",
-            description: "Bạn nhập không thành công",
-          });
-        }
-      } catch (error) {
-        console.error("POST request error:", error);
-        // Handle any network or fetch errors
-        toast({
-          status: "error",
-          position: "top",
-          duration: "5000",
-          isClosable: true,
-          title: "Đăng nhập",
-          description: "Bạn nhập không thành công",
-        });
-      }
-    }
-  };
-
+  // Login GG
   const sendLoginToServer = async (e) => {
     e.preventDefault();
     const email = e.target.name.value;
     console.log(email);
     try {
-      const response = await fetch(`${URL}/auth/login`, {
+      const response = await fetch("https://swp3191.onrender.com/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -127,7 +58,8 @@ function SignUp() {
       if (response.ok) {
         const responseData = await response.json();
         // Handle the response as needed
-        login(responseData.userInfo[0]);
+        console.log(responseData);
+        login(responseData.userInfo);
         setFlag(!flag);
         handleRedirect(responseData.userInfo[0]);
         toast({
@@ -136,15 +68,14 @@ function SignUp() {
           duration: "5000",
           isClosable: true,
           title: "Đăng nhập",
-          description: "Bạn nhập thành công",
+          description: "Bạn nhập  thành côcng",
         });
       } else {
         console.error("POST request failed:", response.statusText);
+
         // Handle the error as needed
       }
     } catch (error) {
-      console.error("POST request error:", error);
-      // Handle any network or fetch errors
       toast({
         status: "error",
         position: "top",
@@ -153,6 +84,8 @@ function SignUp() {
         title: "Đăng nhập",
         description: "Bạn nhập không thành công",
       });
+      console.error("POST request error:", error);
+      // Handle any network or fetch errors
     }
   };
 
@@ -253,7 +186,80 @@ function SignUp() {
           >
             Đăng nhập
           </Text>
-
+          {/* <HStack spacing="15px" justify="center" mb="22px">
+            <Flex
+              justify="center"
+              align="center"
+              w="75px"
+              h="75px"
+              borderRadius="8px"
+              border={useColorModeValue("1px solid", "0px")}
+              borderColor="gray.200"
+              cursor="pointer"
+              transition="all .25s ease"
+              bg={bgIcons}
+              _hover={{ bg: bgIconsHover }}
+            >
+              <Link href="#">
+                <Icon as={FaFacebook} color={colorIcons} w="30px" h="30px" />
+              </Link>
+            </Flex>
+            <Flex
+              justify="center"
+              align="center"
+              w="75px"
+              h="75px"
+              borderRadius="8px"
+              border={useColorModeValue("1px solid", "0px")}
+              borderColor="gray.200"
+              cursor="pointer"
+              transition="all .25s ease"
+              bg={bgIcons}
+              _hover={{ bg: bgIconsHover }}
+            >
+              <Link href="#">
+                <Icon
+                  as={FaApple}
+                  color={colorIcons}
+                  w="30px"
+                  h="30px"
+                  _hover={{ filter: "brightness(120%)" }}
+                />
+              </Link>
+            </Flex>
+            <Flex
+              justify="center"
+              align="center"
+              w="75px"
+              h="75px"
+              borderRadius="8px"
+              border={useColorModeValue("1px solid", "0px")}
+              borderColor="gray.200"
+              cursor="pointer"
+              transition="all .25s ease"
+              bg={bgIcons}
+              _hover={{ bg: bgIconsHover }}
+            >
+              <Link href="#">
+                <Icon
+                  as={FaGoogle}
+                  color={colorIcons}
+                  w="30px"
+                  h="30px"
+                  _hover={{ filter: "brightness(120%)" }}
+                />
+              </Link>
+            </Flex>
+          </HStack> */}
+          {/* <Text
+            fontSize="lg"
+            color="gray.400"
+            fontWeight="bold"
+            textAlign="center"
+            mb="22px"
+          >
+            hoặc
+          </Text> */}
           <form onSubmit={(e) => sendLoginToServer(e)}>
             <FormControl>
               <FormLabel ms="4px" fontSize="sm" fontWeight="normal">
@@ -301,13 +307,11 @@ function SignUp() {
                 ĐĂNG NHẬP
               </Button>
               <Button
-                id="buttonDiv"
                 w={"full"}
                 maxW={"md"}
                 variant={"outline"}
                 leftIcon={<FcGoogle />}
                 marginBottom="5%"
-                // onClick={() => LoginGoogle()}
               >
                 <Center>
                   <Text>Đăng nhập với Google</Text>
@@ -324,12 +328,16 @@ function SignUp() {
             mt="0px"
           >
             <Text color={textColor} fontWeight="medium">
-              Bạn chưa có tài khoản?{" "}
-              <NavLink to="/auth/signup">
-                <Text color={titleColor} as="span" fontWeight="bold">
-                  Đăng kí ngay
-                </Text>
-              </NavLink>
+              Bạn chưa có tài khoản?
+              <Link
+                color={titleColor}
+                as="span"
+                ms="5px"
+                href="#"
+                fontWeight="bold"
+              >
+                Đăng kí ngay
+              </Link>
             </Text>
           </Flex>
         </Flex>

@@ -1,44 +1,37 @@
 import React, { createContext, useContext, useState } from "react";
-import { useHistory } from "react-router-dom";
 
 // Create a new context
 const UserContext = createContext();
 
 // Create a custom provider for the UserContext
 export function UserProvider({ children }) {
-  const history = useHistory();
   const [user, setUser] = useState(null); // You can initialize it with the user object
   const [flag, setFlag] = useState(false);
-  const URL = "https://swp3191.onrender.com";
+
   const login = (userData) => {
     // Implement your login logic here
     // Set the user object once the user is authenticated
-    console.log("SET LOCAL STORAGE: ", userData);
-    localStorage.setItem("mail", userData?.email);
-    localStorage.setItem("role", userData?.Role);
-    localStorage.setItem("picture", userData?.picture);
-    localStorage.setItem(
-      "username",
-      userData?.name ? userData?.name : userData?.userName
-    );
-    localStorage.setItem("ID", userData?.ID);
+    console.log(userData);
+    localStorage.setItem("mail", userData[0]?.email);
+    localStorage.setItem("role", userData[0]?.Role);
+    localStorage.setItem("username", userData[0]?.userName);
     localStorage.setItem("isLogin", true);
+
     setUser(userData);
   };
 
   const logout = () => {
+    // Implement your logout logic here
+    // Clear the user object when the user logs out
     localStorage.removeItem("mail");
     localStorage.removeItem("role");
-    localStorage.removeItem("picture");
     localStorage.removeItem("username");
-    localStorage.removeItem("ID");
     localStorage.removeItem("isLogin");
-    history.push("/auth/signin");
     setUser(null);
   };
 
   return (
-    <UserContext.Provider value={{ user, login, logout, setFlag, flag, URL }}>
+    <UserContext.Provider value={{ user, login, logout, setFlag, flag }}>
       {children}
     </UserContext.Provider>
   );

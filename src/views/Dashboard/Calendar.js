@@ -1,7 +1,6 @@
 // Library imports
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 // Chakra imports
 import {
   Flex,
@@ -36,43 +35,29 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 // You should also import some data for the table
+import { tablesTableData_ExamSlot } from "variables/examslot";
 import { useDisclosure } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
 
 // Import useContext value
+import { useExamSchedule } from "../../components/share/ExamScheduleContext";
 import { useCourse } from "../../components/share/CourseContext";
 import { DELETE_SLOT } from "assets/api";
-import { useExamSchedule } from "../../components/share/ExamScheduleContext";
-import { useExamRoom } from "../../components/share/ExamRoomContext";
 import { useUser } from "../../components/share/UserContext";
 
 function Billing() {
-  useEffect(() => {
-    if (!localStorage.getItem("isLogin")) {
-      toast({
-        status: "error",
-        position: "top",
-        duration: "5000",
-        isClosable: true,
-        title: "Đăng nhập",
-        description: "Bạn cần phải đăng nhập tài khoản trước khi vào",
-      });
-      return history.push("/auth/signin");
-    }
-  }, []);
+  //
+  const toast = useToast();
+  const { user, login, logout, flag, setFlag } = useUser();
+
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");
   const titleColor = useColorModeValue("gray.700", "white");
   const bgStatus = useColorModeValue("gray.400", "navy.900");
-  const history = useHistory();
 
   // Custone hook
-  const toast = useToast();
-  const { user, login, logout, flag, setFlag, URL } = useUser();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { examSchedule, loading } = useExamSchedule();
-  const { setSubjectID, setSubjectName, setExamSlotID } = useExamRoom();
   const { course, loadingCourse } = useCourse();
 
   const [formData, setFormData] = useState({
@@ -98,25 +83,19 @@ function Billing() {
     const startDate = new Date(startDateTimeString);
     const endDate = new Date(endDateTimeString);
     try {
-      const response = await axios.post(`${URL}/exam-schedule`, {
-        courseID: courseID,
-        code: code,
-        startTime: startDate.toISOString(),
-        endTime: endDate.toISOString(),
-      });
+      const response = await axios.post(
+        "https://swp3191.onrender.com/exam-schedule",
+        {
+          courseID: courseID,
+          code: code,
+          startTime: startDate.toISOString(),
+          endTime: endDate.toISOString(),
+        }
+      );
+
       console.log(response.data);
-      if (response.data) {
-        alert(
-          "Tạo ca thi thành công, hệ thống sẽ điều hướng bạn đến trang nhập thông tin"
-        );
-        setSubjectID(response.data.result.subjectID);
-        setSubjectName(response.data.result.subjectName);
-        setExamSlotID(response.data.result.examSlotID);
-        history.push("/admin/examRoom");
-      }
     } catch (error) {
       console.error("POST request error:", error);
-      alert("Tạo ca thi thất bại");
     }
   };
 
@@ -167,6 +146,9 @@ function Billing() {
               Lịch Thi
             </Text>
             <Spacer />
+            <Button onClick={onOpen} colorScheme="blue" variant="solid">
+              Thêm Slot Thi
+            </Button>
           </Flex>
         </CardHeader>
         <CardBody>
@@ -267,11 +249,8 @@ function Billing() {
                           fontWeight="bold"
                           pb=".5rem"
                         >
-                          {new Date(row.startTime).getHours() +
-                            ":" +
-                            new Date(row.startTime).getMinutes() +
-                            " " +
-                            (new Date(row.startTime).getDate() + 1) +
+                          {new Date(row.startTime).getDate() +
+                            1 +
                             "/" +
                             (new Date(row.startTime).getMonth() + 1) +
                             "/" +
@@ -289,11 +268,8 @@ function Billing() {
                           fontWeight="bold"
                           pb=".5rem"
                         >
-                          {new Date(row.endTime).getHours() +
-                            ":" +
-                            new Date(row.endTime).getMinutes() +
-                            " " +
-                            (new Date(row.endTime).getDate() + 1) +
+                          {new Date(row.endTime).getDate() +
+                            1 +
                             "/" +
                             (new Date(row.endTime).getMonth() + 1) +
                             "/" +
@@ -347,6 +323,80 @@ function Billing() {
           </Table>
         </CardBody>
       </Card>
+      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">Thêm lịch thi mới</DrawerHeader>
+          <DrawerBody>
+            <form onSubmit={(e) => handleCreateExamSlot(e)}>
+              <FormControl marginBottom={5} id="courseID" isRequired>
+                <FormLabel>Course</FormLabel>
+                <Select
+                  placeholder="Lựa chọn Course"
+                  id="courseID"
+                  value={formData.courseID}
+                  onChange={handleInputChange}
+                >
+                  {!loadingCourse &&
+                    course.map((item) => (
+                      <option key={item.ID} value={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
+                </Select>
+              </FormControl>
+
+              <FormControl marginBottom={5} id="code" isRequired>
+                <FormLabel>Mã ca thi</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Ví dụ: JS1701"
+                  id="code"
+                  value={formData.code}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="date" isRequired>
+                <FormLabel>Ngày thi</FormLabel>
+                <Input
+                  type="date"
+                  id="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="startTime" isRequired>
+                <FormLabel>Thời gian bắt đầu</FormLabel>
+                <Input
+                  type="time"
+                  id="startTime"
+                  value={formData.startTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="endTime" isRequired>
+                <FormLabel>Thời gian kết thúc</FormLabel>
+                <Input
+                  type="time"
+                  id="endTime"
+                  value={formData.endTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <Flex mt={5}>
+                <Button colorScheme="blue" type="submit">
+                  Tạo mới
+                </Button>
+                <Spacer />
+              </Flex>
+            </form>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Flex>
   );
 }
