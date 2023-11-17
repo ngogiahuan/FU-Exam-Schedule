@@ -34,8 +34,6 @@ export function SearchBar(props) {
         }
       />
       <Input
-        id="myInput"
-        type="text"
         variant="search"
         fontSize="xs"
         bg={inputBg}

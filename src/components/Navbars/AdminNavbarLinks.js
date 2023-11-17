@@ -32,6 +32,7 @@ import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { useUser } from "../../components/share/UserContext";
 import routes from "routes.js";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import { Link } from "react-router-dom/cjs/react-router-dom";
 export default function HeaderLinks(props) {
   const {
@@ -43,6 +44,7 @@ export default function HeaderLinks(props) {
     onOpen,
     ...rest
   } = props;
+
   const toast = useToast();
   const { user, login, logout, flag, setFlag } = useUser();
   const { colorMode } = useColorMode();
@@ -62,6 +64,7 @@ export default function HeaderLinks(props) {
       alignItems="center"
       flexDirection="row"
     >
+      <SearchBar me="18px" />
       {localStorage.getItem("isLogin") === "true" && (
         <Link to="/auth/signin">
           <Button
