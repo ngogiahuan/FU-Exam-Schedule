@@ -45,7 +45,7 @@ import { pageVisits, socialTraffic } from "variables/general";
 import { useHistory } from "react-router-dom";
 import { DownloadIcon } from "@chakra-ui/icons";
 import { EXPORT_FILE_EXCEL } from "assets/api";
-export default function Dashboard() {
+export default function ViewDashboard() {
   let history = useHistory();
   const toast = useToast();
   useEffect(() => {

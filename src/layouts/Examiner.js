@@ -82,7 +82,7 @@ export default function Dashboard(props) {
       if (prop.category === "account") {
         return getRoutes(prop.views);
       }
-      if (prop.layout === "/admin") {
+      if (prop.layout === "/lecturer") {
         return (
           <Route
             path={prop.layout + prop.path}
@@ -130,7 +130,7 @@ export default function Dashboard(props) {
             <PanelContainer>
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="/admin" to="/admin/dashboard" />
+                <Redirect from="/admin" to="/lecturer/registerExamSlot" />
               </Switch>
             </PanelContainer>
           </PanelContent>

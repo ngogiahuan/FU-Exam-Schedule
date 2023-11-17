@@ -134,7 +134,9 @@ export default function Dashboard(props) {
               </Switch>
             </PanelContainer>
           </PanelContent>
-        ) : null}
+        ) : (
+          <Redirect from="/admin" to="/testingStaff/dashboard" />
+        )}
         <Portal>
           <FixedPlugin
             secondary={getActiveNavbar(routes)}

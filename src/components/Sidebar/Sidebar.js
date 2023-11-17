@@ -17,6 +17,7 @@ import {
   useColorModeValue,
   useDisclosure,
   Heading,
+  Icon,
 } from "@chakra-ui/react";
 import IconBox from "components/Icons/IconBox";
 import {
@@ -197,7 +198,24 @@ function Sidebar(props) {
     });
   };
   const { routes } = props;
-  var links = <>{createLinks(routes)}</>;
+  console.log(routes);
+  const userRole = localStorage.getItem("role").trim();
+  // Hàm kiểm tra xem route có phù hợp với vai trò người dùng không
+  const isRouteApplicable = (route) => {
+    if (userRole === "Admin") {
+      // Nếu vai trò là Student, chỉ hiển thị các route trong /admin
+      return route.layout === "/admin";
+    } else if (userRole === "Lecturer") {
+      // Thêm các điều kiện cho các vai trò khác nếu cần thiết
+      return route.layout === "/lecturer";
+    } else if (userRole === "Student") {
+      return route.layout === "/student";
+    }
+    return true;
+  };
+
+  // Tạo danh sách các route phù hợp với vai trò
+  const applicableRoutes = routes.filter(isRouteApplicable);
   //  BRAND
   //  Chakra Color Mode
   let sidebarBg = useColorModeValue("white", "navy.800");
@@ -247,7 +265,7 @@ function Sidebar(props) {
         </Heading>
       </Stack>
       <Heading marginLeft={"20%"} marginTop={"10%"} as="h6" size="xs">
-        Chào, {localStorage.getItem("username")}
+        {localStorage.getItem("username")}
       </Heading>
       <HSeparator my="26px" />
     </Box>
@@ -293,9 +311,35 @@ function Sidebar(props) {
             }
           >
             <Box>{brand}</Box>
-            <Stack direction="column" mb="40px">
-              <Box>{links}</Box>
-            </Stack>
+            <Flex direction="column">
+              {applicableRoutes.map((route, index) => {
+                const routePath = route.layout + route.path;
+                const isActive = location.pathname === routePath;
+                return (
+                  <>
+                    {!route.name || !route.icon ? null : (
+                      <Stack direction="column" mb="5%">
+                        <NavLink to={routePath} key={index}>
+                          <Box
+                            bg={isActive ? "blue.500" : "transparent"}
+                            color={isActive ? "white" : "gray.700"}
+                            _hover={{ bg: "blue.500", color: "white" }}
+                            p="12px"
+                            borderRadius="15px"
+                            fontWeight={isActive ? "bold" : "normal"}
+                            display="flex"
+                            alignItems="center"
+                          >
+                            <Stack marginRight="3%">{route.icon}</Stack>
+                            {route.name}
+                          </Box>
+                        </NavLink>
+                      </Stack>
+                    )}
+                  </>
+                );
+              })}
+            </Flex>
           </Scrollbars>
         </Box>
       </Box>

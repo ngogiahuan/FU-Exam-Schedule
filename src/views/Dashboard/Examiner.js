@@ -1,7 +1,6 @@
 // Library imports
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-
 // Chakra imports
 import {
   Flex,
@@ -36,17 +35,42 @@ import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
 // You should also import some data for the table
+import { tablesTableData_ExamSlot } from "variables/examslot";
 import { useDisclosure } from "@chakra-ui/react";
-import { useHistory } from "react-router-dom";
 
 // Import useContext value
+import { useExamSchedule } from "../../components/share/ExamScheduleContext";
 import { useCourse } from "../../components/share/CourseContext";
 import { DELETE_SLOT } from "assets/api";
-import { useExamSchedule } from "../../components/share/ExamScheduleContext";
-import { useExamRoom } from "../../components/share/ExamRoomContext";
 import { useUser } from "../../components/share/UserContext";
+import { GET_ALL_EXAMNIER } from "assets/api";
+import { useHistory } from "react-router-dom";
 
-function Calendar() {
+function Examiner() {
+  const history = useHistory();
+  const toast = useToast();
+  const { user, login, logout, flag, setFlag } = useUser();
+
+  // Chakra color mode
+  const textColor = useColorModeValue("gray.700", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const titleColor = useColorModeValue("gray.700", "white");
+  const bgStatus = useColorModeValue("gray.400", "navy.900");
+
+  // Custone hook
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { course, loadingCourse } = useCourse();
+
+  const [formData, setFormData] = useState({
+    courseID: "",
+    code: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+  });
+
+  // DataExaminer
+  const [dataExaminer, setDataExaminer] = useState([]);
   useEffect(() => {
     if (!localStorage.getItem("isLogin")) {
       toast({
@@ -59,34 +83,33 @@ function Calendar() {
       });
       return history.push("/auth/signin");
     }
+    const getAllExaminer = async () => {
+      try {
+        const { url, options } = GET_ALL_EXAMNIER();
+        const response = await fetch(url, options);
+        const json = await response.json();
+        if (json.result) {
+          console.log(json?.result);
+          setDataExaminer(json?.result);
+          setFlag(!flag);
+        }
+      } catch (error) {
+        toast({
+          status: "error",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Examiner",
+          description: "Hệ thống lỗi, mời bạn thử lại",
+        });
+      }
+    };
+    getAllExaminer();
   }, []);
-  // Chakra color mode
-  const textColor = useColorModeValue("gray.700", "white");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
-  const titleColor = useColorModeValue("gray.700", "white");
-  const bgStatus = useColorModeValue("gray.400", "navy.900");
-  const history = useHistory();
-
-  // Custone hook
-  const toast = useToast();
-  const { user, login, logout, flag, setFlag, URL } = useUser();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { examSchedule, loading } = useExamSchedule();
-  const { setSubjectID, setSubjectName, setExamSlotID } = useExamRoom();
-  const { course, loadingCourse } = useCourse();
-
-  const [formData, setFormData] = useState({
-    courseID: "",
-    code: "",
-    date: "",
-    startTime: "",
-    endTime: "",
-  });
 
   // Call api create Slot thi
   const handleCreateExamSlot = async (e) => {
     e.preventDefault();
-
     const { courseID, code, date, startTime, endTime } = formData;
 
     // Combine date and time strings
@@ -94,29 +117,22 @@ function Calendar() {
     const endDateTimeString = `${date}T${endTime}:00.000Z`;
 
     // Convert to Date objects
-
     const startDate = new Date(startDateTimeString);
     const endDate = new Date(endDateTimeString);
     try {
-      const response = await axios.post(`${URL}/exam-schedule`, {
-        courseID: courseID,
-        code: code,
-        startTime: startDate.toISOString(),
-        endTime: endDate.toISOString(),
-      });
+      const response = await axios.post(
+        "https://swp3191.onrender.com/exam-schedule",
+        {
+          courseID: courseID,
+          code: code,
+          startTime: startDate.toISOString(),
+          endTime: endDate.toISOString(),
+        }
+      );
+
       console.log(response.data);
-      if (response.data) {
-        alert(
-          "Tạo ca thi thành công, hệ thống sẽ điều hướng bạn đến trang nhập thông tin"
-        );
-        setSubjectID(response.data.result.subjectID);
-        setSubjectName(response.data.result.subjectName);
-        setExamSlotID(response.data.result.examSlotID);
-        history.push("/admin/examRoom");
-      }
     } catch (error) {
       console.error("POST request error:", error);
-      alert("Tạo ca thi thất bại");
     }
   };
 
@@ -164,7 +180,7 @@ function Calendar() {
         <CardHeader p="6px 0px 22px 0px" flexWrap>
           <Flex>
             <Text fontSize="xl" color={textColor} fontWeight="bold">
-              Lịch Thi
+              Danh sách tất cả giám thị
             </Text>
             <Spacer />
           </Flex>
@@ -177,16 +193,16 @@ function Calendar() {
                   ID
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Mã môn
+                  Họ và tên
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Tên môn
+                  Mail
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Giờ bắt đầu
+                  Năm kinh nghiệm
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Giờ kết thúc
+                  Bộ môn
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
                   Trạng thái
@@ -197,9 +213,9 @@ function Calendar() {
               </Tr>
             </Thead>
             <Tbody>
-              {!loading &&
-                examSchedule.map((row, index, arr) => {
-                  console.log(row);
+              {console.log(dataExaminer)}
+              {dataExaminer &&
+                dataExaminer?.map((row, index, arr) => {
                   return (
                     <Tr>
                       {/* ID */}
@@ -221,7 +237,7 @@ function Calendar() {
                               fontWeight="bold"
                               minWidth="100%"
                             >
-                              {row.examSlotID}
+                              {row.ID}
                             </Text>
                           </Flex>
                         </Flex>
@@ -237,7 +253,7 @@ function Calendar() {
                             color={textColor}
                             fontWeight="bold"
                           >
-                            {row.subjectID}
+                            {row.name}
                           </Text>
                         </Flex>
                       </Td>
@@ -252,7 +268,7 @@ function Calendar() {
                             color={textColor}
                             fontWeight="bold"
                           >
-                            {row.courseName}
+                            {row.email}
                           </Text>
                         </Flex>
                       </Td>
@@ -267,15 +283,7 @@ function Calendar() {
                           fontWeight="bold"
                           pb=".5rem"
                         >
-                          {new Date(row.startTime).getHours() +
-                            ":" +
-                            new Date(row.startTime).getMinutes() +
-                            " " +
-                            (new Date(row.startTime).getDate() + 1) +
-                            "/" +
-                            (new Date(row.startTime).getMonth() + 1) +
-                            "/" +
-                            new Date(row.startTime).getFullYear()}
+                          {row?.experienceYears}
                         </Text>
                       </Td>
                       {/* endTime */}
@@ -289,15 +297,7 @@ function Calendar() {
                           fontWeight="bold"
                           pb=".5rem"
                         >
-                          {new Date(row.endTime).getHours() +
-                            ":" +
-                            new Date(row.endTime).getMinutes() +
-                            " " +
-                            (new Date(row.endTime).getDate() + 1) +
-                            "/" +
-                            (new Date(row.endTime).getMonth() + 1) +
-                            "/" +
-                            new Date(row.endTime).getFullYear()}
+                          {row?.specialization}
                         </Text>
                       </Td>
                       {/* Status */}
@@ -306,19 +306,13 @@ function Calendar() {
                         borderBottom={index ? "none" : null}
                       >
                         <Badge
-                          bg={
-                            "CHƯA BẮT ĐẦU" === "CHƯA BẮT ĐẦU"
-                              ? "green.400"
-                              : "red"
-                          }
-                          color={
-                            row.status === "CHƯA BẮT ĐẦU" ? "white" : "black"
-                          }
+                          bg={row.status === true ? "green.400" : "red"}
+                          color={row.status === true ? "white" : "black"}
                           fontSize="16px"
                           p="3px 10px"
                           borderRadius="8px"
                         >
-                          CHƯA BẮT ĐẦU
+                          {row?.status === true ? "Hoạt động" : "Tạm khóa"}
                         </Badge>
                       </Td>
                       {/* Edit */}
@@ -347,8 +341,82 @@ function Calendar() {
           </Table>
         </CardBody>
       </Card>
+      <Drawer placement="right" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">Thêm lịch thi mới</DrawerHeader>
+          <DrawerBody>
+            <form onSubmit={(e) => handleCreateExamSlot(e)}>
+              <FormControl marginBottom={5} id="courseID" isRequired>
+                <FormLabel>Course</FormLabel>
+                <Select
+                  placeholder="Lựa chọn Course"
+                  id="courseID"
+                  value={formData.courseID}
+                  onChange={handleInputChange}
+                >
+                  {!loadingCourse &&
+                    course.map((item) => (
+                      <option key={item.ID} value={item.ID}>
+                        {item.name}
+                      </option>
+                    ))}
+                </Select>
+              </FormControl>
+
+              <FormControl marginBottom={5} id="code" isRequired>
+                <FormLabel>Mã ca thi</FormLabel>
+                <Input
+                  type="text"
+                  placeholder="Ví dụ: JS1701"
+                  id="code"
+                  value={formData.code}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="date" isRequired>
+                <FormLabel>Ngày thi</FormLabel>
+                <Input
+                  type="date"
+                  id="date"
+                  value={formData.date}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="startTime" isRequired>
+                <FormLabel>Thời gian bắt đầu</FormLabel>
+                <Input
+                  type="time"
+                  id="startTime"
+                  value={formData.startTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <FormControl marginBottom={5} id="endTime" isRequired>
+                <FormLabel>Thời gian kết thúc</FormLabel>
+                <Input
+                  type="time"
+                  id="endTime"
+                  value={formData.endTime}
+                  onChange={handleInputChange}
+                />
+              </FormControl>
+
+              <Flex mt={5}>
+                <Button colorScheme="blue" type="submit">
+                  Tạo mới
+                </Button>
+                <Spacer />
+              </Flex>
+            </form>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
     </Flex>
   );
 }
 
-export default Calendar;
+export default Examiner;
