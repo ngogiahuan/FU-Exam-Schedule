@@ -1,6 +1,8 @@
 // Library imports
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { Grid, Box } from "@chakra-ui/react";
+
 // Chakra imports
 import {
   Flex,
@@ -50,6 +52,7 @@ import { useHistory } from "react-router-dom";
 // Import useContext value
 import { useUser } from "../../components/share/UserContext";
 import { REGISTER_EXAM_SCHEDULE, GET_ALL_EXAMSLOT } from "assets/api";
+import MonthDropdown from "components/MonthDropdown";
 function TableRegister() {
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
@@ -68,8 +71,21 @@ function TableRegister() {
     endTime: "",
   });
   const [dataExamSlot, setDataExamSlot] = useState();
-  const searchIconColor = useColorModeValue("gray.700", "gray.200");
-  const inputBg = useColorModeValue("white", "navy.800");
+  const [selectedMonth, setSelectedMonth] = useState(null);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   useEffect(() => {
     if (!localStorage.getItem("isLogin")) {
       toast({
@@ -107,11 +123,9 @@ function TableRegister() {
         });
       });
     });
-  }, []);
+  }, [flag]);
   //RegisterExamSchedule
   const RegisterExamSchedule = async (examSlotID) => {
-    let text = "Bạn đã đăng kí lịch trực ca thi này";
-    if (confirm(text) == true) {
       try {
         const response = await fetch("https://swp3191.onrender.com/register", {
           method: "POST",
@@ -154,260 +168,173 @@ function TableRegister() {
           description: "Đăng kí ca không thành công",
         });
       }
-    } else {
-      toast({
-        status: "error",
-        position: "top",
-        duration: "5000",
-        isClosable: true,
-        title: "Đăng kí trực",
-        description: "Đăng kí ca không thành công",
-      });
-    }
   };
-
+  //Update RegisterExamSchedule
+  const UpdateRegisterExamSchedule = async (examSlotID) => {
+      try {
+        const response = await fetch(
+          "https://swp3191.onrender.com/exam-room/update-register",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              examinerID: localStorage.getItem("examinerID"),
+              examSlotID: examSlotID,
+            }),
+          }
+        );
+        console.log(response);
+        if (response.ok) {
+          toast({
+            status: "success",
+            position: "top",
+            duration: "5000",
+            isClosable: true,
+            title: "Hủy Đăng Ký",
+            description: "Hủy Đăng Ký Thành Công",
+          });
+          setFlag(!flag);
+        } else {
+          toast({
+            status: "error",
+            position: "top",
+            duration: "5000",
+            isClosable: true,
+            title: "Hủy Đăng Ký",
+            description: "Hủy Đăng Ký Không Thành Công",
+          });
+        }
+      } catch (error) {
+        toast({
+          status: "error",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Hủy Đăng Ký",
+          description: "Hủy Đăng Ký Không Thành Công",
+        });
+      }
+  };
+  const currentDate = new Date();
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <Card overflowX={{ sm: "scroll", xl: "hidden" }} pb="0px">
         <CardHeader p="6px 0px 22px 0px" flexWrap>
-          <Flex>
-            <Text fontSize="xl" color={textColor} fontWeight="bold">
-              Danh sách các ca thi hiện có
-            </Text>
-            <Spacer />
-            <InputGroup borderRadius="8px" w="200px">
-              <InputLeftElement
-                children={
-                  <IconButton
-                    bg="inherit"
-                    borderRadius="inherit"
-                    _hover="none"
-                    _active={{
-                      bg: "inherit",
-                      transform: "none",
-                      borderColor: "transparent",
-                    }}
-                    _focus={{
-                      boxShadow: "none",
-                    }}
-                    icon={
-                      <SearchIcon color={searchIconColor} w="15px" h="15px" />
-                    }
-                  ></IconButton>
-                }
-              />
-              <Input
-                id="myInput"
-                type="text"
-                variant="search"
-                fontSize="xs"
-                bg={inputBg}
-                placeholder="Tìm kiếm..."
-              />
-            </InputGroup>
-          </Flex>
+          <MonthDropdown onSelect={setSelectedMonth} />
+          {/* ... (other code) */}
         </CardHeader>
         <CardBody>
-          <Table variant="simple" color={textColor}>
-            <Thead>
-              <Tr my=".8rem" pl="0px" color="gray.400">
-                <Th borderColor={borderColor} color="gray.400">
-                  STT
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Kỳ thi
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Mã ca thi
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Thời gian
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Ngày thi
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Trạng thái
-                </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Chức năng
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody id="myTable">
-              {dataExamSlot &&
-                dataExamSlot?.map((row, index, arr) => {
+          <Grid templateColumns="repeat(auto-fill, minmax(200px, 1fr))" gap={4}>
+            {dataExamSlot &&
+              dataExamSlot
+                .filter((row) => {
+                  if (!selectedMonth) return true;
+                  const month = new Date(row[1]?.startTime).getMonth();
+                  return month === months.indexOf(selectedMonth);
+                })
+                .map((row, index) => {
+                  const isDisabled =
+                    new Date(row[1]?.startTime).getTime() -
+                      currentDate.getTime() <
+                    1;
                   return (
                     row[1]?.status === true && (
-                      <Tr>
-                        {/* subCode */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
+                      <Box
+                        key={index}
+                        p="4"
+                        borderWidth="1px"
+                        borderRadius="md"
+                        opacity={isDisabled ? 0.5 : 1} // Set opacity based on the condition
+                      >
+                        <Text fontSize="md" fontWeight="bold" pb=".5rem">
+                          {row[1]?.examSlotID}
+                        </Text>
+                        <Text
+                          className="flex flex-row justify-content-between"
+                          fontSize="sm"
+                          style={{ fontWeight: "bold" }}
                         >
-                          <Flex direction="column">
-                            <Text
-                              fontSize="md"
-                              color={textColor}
-                              fontWeight="bold"
-                            >
-                              {index + 1}
-                            </Text>
-                          </Flex>
-                        </Td>
-                        {/* examBatchCode */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Flex direction="column">
-                            <Text
-                              fontSize="md"
-                              color={textColor}
-                              fontWeight="bold"
-                            >
-                              {row[1]?.examBatchCode}
-                            </Text>
-                          </Flex>
-                        </Td>
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Flex direction="column">
-                            <Text
-                              fontSize="md"
-                              color={textColor}
-                              fontWeight="bold"
-                            >
-                              {row[1]?.examSlotID}
-                            </Text>
-                          </Flex>
-                        </Td>
-                        {/* startTime */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Text
-                            fontSize="md"
-                            color={textColor}
-                            fontWeight="bold"
-                            pb=".5rem"
-                          >
-                            {String(
-                              new Date(row[1]?.startTime).getHours() - 7
+                          <p>Thời gian</p>
+                          {String(
+                            new Date(row[1]?.startTime).getHours() - 7
+                          ).padStart(2, "0") +
+                            ":" +
+                            String(
+                              new Date(row[1]?.startTime).getMinutes()
                             ).padStart(2, "0") +
-                              ":" +
-                              String(
-                                new Date(row[1]?.startTime).getMinutes()
-                              ).padStart(2, "0") +
-                              " - " +
-                              String(
-                                new Date(row[1]?.endTime).getHours() - 7
-                              ).padStart(2, "0") +
-                              ":" +
-                              String(
-                                new Date(row[1]?.endTime).getMinutes()
-                              ).padStart(2, "0")}
-                          </Text>
-                        </Td>
-                        {/* endTime */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
+                            " - " +
+                            String(
+                              new Date(row[1]?.endTime).getHours() - 7
+                            ).padStart(2, "0") +
+                            ":" +
+                            String(
+                              new Date(row[1]?.endTime).getMinutes()
+                            ).padStart(2, "0")}
+                        </Text>
+                        <Text
+                          className="flex flex-row justify-content-between"
+                          fontSize="sm"
+                          style={{ fontWeight: "bold" }}
                         >
-                          <Text
-                            fontSize="md"
-                            color={textColor}
-                            fontWeight="bold"
-                            pb=".5rem"
-                          >
-                            {new Date(row[1]?.startTime).getDate() +
-                              "/" +
-                              (new Date(row[1]?.startTime).getMonth() + 1) +
-                              "/" +
-                              new Date(row[1]?.startTime).getFullYear()}
-                          </Text>
-                        </Td>
-                        {/* Status */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
+                          <p>Ngày thi</p>
+                          {String(
+                            new Date(row[1]?.startTime).getDate()
+                          ).padStart(2, "0") +
+                            "/" +
+                            String(
+                              new Date(row[1]?.startTime).getMonth() + 1
+                            ).padStart(2, "0") +
+                            "/" +
+                            String(new Date(row[1]?.startTime).getFullYear())}
+                        </Text>
+                        <Text
+                          className="flex flex-row justify-content-between"
+                          fontSize="sm"
+                          style={{ fontWeight: "bold" }}
                         >
-                          <Badge
-                            bg={
-                              "CHƯA BẮT ĐẦU" === "CHƯA BẮT ĐẦU"
-                                ? "green.400"
-                                : "red"
-                            }
-                            color={
-                              row[1]?.status === "CHƯA BẮT ĐẦU"
-                                ? "white"
-                                : "black"
-                            }
-                            fontSize="16px"
-                            p="3px 10px"
-                            borderRadius="8px"
-                          >
-                            CHƯA BẮT ĐẦU
-                          </Badge>
-                        </Td>
-                        {/* Edit */}
-                        <Td
-                          borderColor={borderColor}
-                          borderBottom={index ? "none" : null}
-                        >
-                          <Menu>
-                            {console.log(row[1])}
-                            {row[1]?.register?.find(
-                              (item) =>
-                                item?.examinerID ===
-                                localStorage.getItem("examinerID")
-                            ) ? (
-                              <Button
-                                colorScheme="red"
-                                onClick={() =>
-                                  RegisterExamSchedule(row[1]?.examSlotID)
-                                }
-                                as={Button}
-                              >
-                                Hủy đăng kí
-                              </Button>
-                            ) : (
-                              <Button
-                                colorScheme="orange"
-                                onClick={() =>
-                                  RegisterExamSchedule(row[1]?.examSlotID)
-                                }
-                                as={Button}
-                              >
-                                Đăng kí
-                              </Button>
-                            )}
-                          </Menu>
-                        </Td>
-                      </Tr>
+                          <p>Địa điểm</p>
+                          {row[1]?.location}
+                        </Text>
+
+                        <Menu mt="4">
+                          {console.log(row[1])}
+                          {row[1]?.register?.find(
+                            (item) =>
+                              item?.examinerID ===
+                              localStorage.getItem("examinerID")
+                          ) ? (
+                            <Button
+                              colorScheme="red"
+                              onClick={() =>
+                                UpdateRegisterExamSchedule(row[1]?.examSlotID)
+                              }
+                              as={Button}
+                              mt="2"
+                            >
+                              Hủy đăng kí
+                            </Button>
+                          ) : (
+                            <Button
+                              colorScheme="green"
+                              onClick={() =>
+                                RegisterExamSchedule(row[1]?.examSlotID)
+                              }
+                              as={Button}
+                              mt="2"
+                            >
+                              Đăng kí
+                            </Button>
+                          )}
+                        </Menu>
+                      </Box>
                     )
                   );
                 })}
-            </Tbody>
-          </Table>
+          </Grid>
         </CardBody>
       </Card>
-      {/* <Modal closeOnOverlayClick={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Xác thực đăng kí ca thi</ModalHeader>
-          <ModalCloseButton />
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3}>
-              Save
-            </Button>
-            <Button onClick={onClose}>Cancel</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */}
     </Flex>
   );
 }

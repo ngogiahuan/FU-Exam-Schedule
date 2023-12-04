@@ -130,7 +130,7 @@ function ExamRoom() {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
-    fetch("http://localhost:4000/exam-room/import-excel", {
+    fetch("https://swp3191.onrender.com/exam-room/import-excel", {
       method: "POST",
       body: formData,
     })

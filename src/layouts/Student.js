@@ -1,15 +1,18 @@
+/*
+  Prime React
+*/
+import { MegaMenu } from "primereact/megamenu";
 // Chakra imports
 import {
   Portal,
   useDisclosure,
-  Stack,
   Box,
   useColorMode,
+  Button,
+  useToast,
 } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 // Layout components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
-import Sidebar from "components/Sidebar/Sidebar.js";
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import routes from "routes.js";
@@ -20,8 +23,12 @@ import MainPanel from "../components/Layout/MainPanel";
 import PanelContainer from "../components/Layout/PanelContainer";
 import PanelContent from "../components/Layout/PanelContent";
 import bgAdmin from "assets/img/bg-sukien.png";
+import logo from "../assets/img/logo/logo-no-text-nobg.png";
+import { useUser } from "components/share/UserContext";
 
 export default function Dashboard(props) {
+  const toast = useToast();
+  const { user, login, logout, flag, setFlag } = useUser();
   const { ...rest } = props;
   // states and functions
   const [fixed, setFixed] = useState(false);
@@ -98,10 +105,38 @@ export default function Dashboard(props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   document.documentElement.dir = "ltr";
   // Chakra Color Mode
+  /*  
+    Custome Menu
+  */
+  const items = [
+    {
+      label: "Xem lịch thi",
+    },
+    {
+      label: (
+        <Button
+          onClick={() => {
+            logout();
+            toast({
+              status: "success",
+              position: "top",
+              duration: "5000",
+              isClosable: true,
+              title: "Đăng xuất",
+              description: "Bạn đăng xuất thành công",
+            });
+            window.location.reload();
+          }}
+        >
+          Đăng xuất
+        </Button>
+      ),
+    },
+  ];
   return (
-    <Box>
+    <Box w="100%" overflowX="hidden">
       <Box
-        minH="40vh"
+        minH="100vh"
         w="100%"
         position="absolute"
         bgImage={colorMode === "light" ? bgAdmin : "none"}
@@ -109,51 +144,59 @@ export default function Dashboard(props) {
         bgSize="cover"
         top="0"
       />
-      <Sidebar routes={routes} display="none" {...rest} />
-      <MainPanel
-        w={{
-          base: "100%",
-          xl: "calc(100% - 275px)",
-        }}
-      >
-        <Portal>
-          <AdminNavbar
-            onOpen={onOpen}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
-            fixed={fixed}
-            {...rest}
-          />
-        </Portal>
-        {getRoute() ? (
-          <PanelContent>
-            <PanelContainer>
-              <Switch>
-                {getRoutes(routes)}
-                <Redirect from="/admin" to="/student/viewSchedule" />
-              </Switch>
-            </PanelContainer>
-          </PanelContent>
-        ) : (
-          <Redirect from="/admin" to="/student/viewSchedule" />
-        )}
-        <Portal>
-          <FixedPlugin
-            secondary={getActiveNavbar(routes)}
-            fixed={fixed}
-            onOpen={onOpen}
-          />
-        </Portal>
-        <Configurator
-          secondary={getActiveNavbar(routes)}
-          isOpen={isOpen}
-          onClose={onClose}
-          isChecked={fixed}
-          onSwitch={(value) => {
-            setFixed(value);
+      <Box d="flex" flexDirection="column" h="100vh" overflow="hidden">
+        {/* Fixed Navbar */}
+        <MegaMenu
+          style={{
+            position: "fixed",
+            width: "100%",
+            zIndex: 1000, // Adjust the z-index as needed
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
+          model={items}
+          orientation="horizontal"
+          breakpoint="960px"
         />
-      </MainPanel>
+
+        {/* Main Content */}
+        <MainPanel
+          w={{
+            base: "100%",
+            xl: "calc(100% - 100px)", // Adjust the width accounting for the fixed navbar
+          }}
+        >
+          {getRoute() ? (
+            <PanelContent>
+              <PanelContainer>
+                <Switch>
+                  {getRoutes(routes)}
+                  <Redirect from="/admin" to="/student/viewSchedule" />
+                </Switch>
+              </PanelContainer>
+            </PanelContent>
+          ) : (
+            <Redirect from="/admin" to="/student/viewSchedule" />
+          )}
+          <Portal>
+            <FixedPlugin
+              secondary={getActiveNavbar(routes)}
+              fixed={fixed}
+              onOpen={onOpen}
+            />
+          </Portal>
+          <Configurator
+            secondary={getActiveNavbar(routes)}
+            isOpen={isOpen}
+            onClose={onClose}
+            isChecked={fixed}
+            onSwitch={(value) => {
+              setFixed(value);
+            }}
+          />
+        </MainPanel>
+      </Box>
     </Box>
   );
 }

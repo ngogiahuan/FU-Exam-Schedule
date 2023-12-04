@@ -114,9 +114,6 @@ function SignUp() {
   // Xử lý phân trang cho từng role
   function handleRedirect(user) {
     switch (user.Role.trim()) {
-      case "Admin":
-        history.push("/admin");
-        break;
       case "Testing Admin":
         history.push("/admin");
         break;

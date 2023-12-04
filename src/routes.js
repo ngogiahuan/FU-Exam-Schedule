@@ -1,15 +1,12 @@
 // import
 import React from "react";
 import Dashboard from "views/Dashboard/Dashboard.js";
-import Calendar from "views/Dashboard/Calendar.js";
-import CreateExamRoom from "views/Dashboard/CreateExamRoom.js";
-import ExamSlot from "views/Dashboard/ExamSlot.js";
 import SignIn from "views/Pages/SignIn.js";
 import SignUp from "views/Pages/SignUp.js";
 /*
 Import Icon
 */
-import { HomeIcon, StatsIcon, PersonIcon } from "components/Icons/Icons";
+import { HomeIcon } from "components/Icons/Icons";
 import { CalendarIcon, HamburgerIcon, ViewIcon } from "@chakra-ui/icons";
 import { AiOutlineTable } from "react-icons/ai";
 import Examiner from "views/Dashboard/Examiner";
@@ -25,13 +22,13 @@ var dashRoutes = [
   /*
   Admin Route
   */
-  {
-    path: "/dashboard",
-    name: "Báo cáo",
-    icon: <HomeIcon color="inherit" />,
-    component: Dashboard,
-    layout: "/admin",
-  },
+  // {
+  //   path: "/dashboard",
+  //   name: "Báo cáo",
+  //   icon: <HomeIcon color="inherit" />,
+  //   component: Dashboard,
+  //   layout: "/admin",
+  // },
   {
     path: "/listExamScheduler",
     name: "Danh sách ca thi",
@@ -58,6 +55,13 @@ var dashRoutes = [
     component: ListAccountComponent,
     layout: "/admin",
   },
+  {
+    path: "/examiner",
+    name: "Danh sách giám thị",
+    icon: <HamburgerIcon color="inherit" />,
+    component: Examiner,
+    layout: "/admin",
+  },
   /*
  Route Examiner
   */
@@ -68,39 +72,11 @@ var dashRoutes = [
     component: TableRegister,
     layout: "/lecturer",
   },
-  // {
-  //   path: "/calendar",
-  //   name: "Danh sách lịch thi",
-  //   icon: <CalendarIcon color="inherit" />,
-  //   component: Calendar,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/examSlot",
-  //   name: "Danh sách Ca thi",
-  //   icon: <CalendarIcon color="inherit" />,
-  //   component: ExamSlot,
-  //   layout: "/admin",
-  // },
-  // {
-  //   path: "/examRoom",
-  //   name: "Danh sách phòng thi",
-  //   icon: <CalendarIcon color="inherit" />,
-  //   component: CreateExamRoom,
-  //   layout: "/admin",
-  // },
-  {
-    path: "/examiner",
-    name: "Danh sách giám thị",
-    icon: <HamburgerIcon color="inherit" />,
-    component: Examiner,
-    layout: "/admin",
-  },
 
   {
-    path: "/getSalary",
-    name: "Bảng lương cá nhân",
-    icon: <ViewIcon color="inherit" />,
+    path: "/getViewExamSlot",
+    name: "Danh sách ca thi",
+    icon: <CalendarIcon color="inherit" />,
     component: MyCurrentExamSchedule,
     layout: "/lecturer",
   },

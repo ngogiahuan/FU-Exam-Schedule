@@ -5,10 +5,6 @@ import {
   Box,
   Button,
   Flex,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Stack,
   Text,
   useColorMode,
@@ -24,12 +20,8 @@ import {
   ProfileIcon,
 } from "components/Icons/Icons";
 // Custom Components
-import { ItemContent } from "components/Menu/ItemContent";
-import { SearchBar } from "components/Navbars/SearchBar/SearchBar";
 import { SidebarResponsive } from "components/Sidebar/Sidebar";
 import React from "react";
-import { useContext } from "react";
-import { NavLink } from "react-router-dom";
 import { useUser } from "../../components/share/UserContext";
 import routes from "routes.js";
 import { Link } from "react-router-dom/cjs/react-router-dom";

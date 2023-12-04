@@ -95,6 +95,15 @@ export function GET_FULL_SLOT_INFO() {
   };
 }
 
+export function GET_FULL_SLOT_INFO_BY_ID(id) {
+  return {
+    url: `${API_URL}getExamSlotFullInfo/${id}`,
+    options: {
+      method: "GET",
+    },
+  };
+}
+
 export function GET_ALL_STUDENT_BY_EXAM_ROOM_ID(id) {
   return {
     url: `${API_URL}examRoomWithStudent/${id}`,
@@ -143,11 +152,42 @@ export function GET_ALL_EXAM_SLOT() {
 /*
  ****ADMIN ROUTE
  */
+/*
+  API Testing Admin
+*/
+export function UPDATE_REGISTER_EXAMSLOT(examinerID, examSlotID) {
+  return {
+    url: `${API_URL}exam-room/update-register`,
+    options: {
+      method: "PUT",
+    },
+    body: JSON.stringify({ examinerID: examinerID, examSlotID: examSlotID }),
+  };
+}
 
 // Student Route
 export function VIEW_ALL_EXAMROOM() {
   return {
     url: `${API_URL}student/viewExamSlot/all?StudentId=SE171018&&SemesterCode=Fall_2023`,
+    options: {
+      method: "GET",
+    },
+  };
+}
+
+export function VIEW_ALL_EXAMINER_EXAMSLOT(examinerID) {
+  return {
+    url: `${API_URL}examiner/exam-schedule/filter?examinerID=${examinerID}`,
+    options: {
+      method: "GET",
+    },
+  };
+}
+
+export function VIEW_EXAMROOM_BY_EXAMINERID(examinerID, semesterID, month, week) {
+  console.log(examinerID, semesterID, month, week);
+  return {
+    url: `${API_URL}examiner/exam-schedule/filter?examinerID=${examinerID.trim()}&&semesterID=${semesterID}&&month=${month}&&week=${week}`,
     options: {
       method: "GET",
     },

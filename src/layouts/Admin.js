@@ -130,7 +130,7 @@ export default function Dashboard(props) {
             <PanelContainer>
               <Switch>
                 {getRoutes(routes)}
-                <Redirect from="/admin" to="/admin/dashboard" />
+                <Redirect from="/admin" to="/admin/listExamScheduler" />
               </Switch>
             </PanelContainer>
           </PanelContent>

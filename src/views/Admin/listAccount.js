@@ -221,7 +221,7 @@ function ListAccountComponent() {
                                 <Tag
                                   className="text-gray-900"
                                   severity="success"
-                                  value="Họat động"
+                                  value="Hoạt động"
                                 ></Tag>
                               ) : (
                                 <Tag
@@ -241,7 +241,7 @@ function ListAccountComponent() {
                           cursor="pointer"
                           borderColor={borderColor}
                         >
-                          {i?.Role.trim() === "Admin" ? (
+                          {(i?.Role.trim() === "Admin" || i?.Role.trim() === "Lecturer") ? (
                             <Button
                               isDisabled
                               onClick={() => {

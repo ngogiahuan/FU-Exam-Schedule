@@ -207,9 +207,6 @@ function Examiner() {
                 <Th borderColor={borderColor} color="gray.400">
                   Trạng thái
                 </Th>
-                <Th borderColor={borderColor} color="gray.400">
-                  Chức năng
-                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -316,24 +313,6 @@ function Examiner() {
                         </Badge>
                       </Td>
                       {/* Edit */}
-                      <Td
-                        borderColor={borderColor}
-                        borderBottom={index ? "none" : null}
-                      >
-                        <Menu>
-                          <MenuButton as={Button}>Chức năng</MenuButton>
-                          <MenuList>
-                            <MenuItem>Chỉnh sửa</MenuItem>
-                            <MenuItem
-                              onClick={() =>
-                                deleteExamSlotbyId(row?.examSlotID)
-                              }
-                            >
-                              Xóa Slot
-                            </MenuItem>
-                          </MenuList>
-                        </Menu>
-                      </Td>
                     </Tr>
                   );
                 })}

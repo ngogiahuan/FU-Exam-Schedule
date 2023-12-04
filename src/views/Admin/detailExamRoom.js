@@ -32,7 +32,18 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuItemOption,
+  MenuGroup,
+  MenuOptionGroup,
+  MenuDivider,
 } from "@chakra-ui/react";
+
+import { ChevronDownIcon } from "@chakra-ui/icons";
+
 /*
 Import PrimeReact
 */
@@ -44,9 +55,116 @@ import CardHeader from "components/Card/CardHeader.js";
 // You should also import some data for the table
 import { useHistory } from "react-router-dom";
 import { GET_ALL_STUDENT_BY_EXAM_ROOM_ID } from "assets/api";
-import ExcelModal from "components/Modal/ExcelModal.js";
-import StudentModal from "components/Modal/StudentModal";
 import { useUser } from "../../components/share/UserContext";
+
+// Component hiển thị Menu điểm danh giám thị
+const AttendanceComponent = ({ data }) => {
+  const { user, flag, setFlag, URL } = useUser();
+  const [attendanceTextDisplay, setAttendanceTextDisplay] = useState("");
+  const [attendanceStatus, setAttendanceStatus] = useState(
+    data?.attendanceStatus
+  );
+  const toast = useToast();
+
+  // Function xử lý điểm danh
+  const handleAttendance = async (text) => {
+    setAttendanceStatus(text);
+    try {
+      const response = await fetch(
+        `${URL}/examRoom/attendance/${data?.examRoomID}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ attendanceStatus: text }),
+        }
+      );
+
+      if (response.ok) {
+        toast({
+          status: "success",
+          position: "top",
+          duration: 5000,
+          isClosable: true,
+          title: "Điểm danh",
+          description: "Bạn đã thêm điểm danh thành công",
+        });
+      } else {
+        console.error("ERROR: ", response);
+        throw new Error("Điểm danh không thành công");
+      }
+    } catch (error) {
+      console.error("ERROR: ", error);
+      toast({
+        status: "error",
+        position: "top",
+        duration: 5000,
+        isClosable: true,
+        title: "Điểm danh",
+        description: "Bạn điểm danh không thành công",
+      });
+    }
+  };
+
+  // Function xử lý hiển thị text display
+  useEffect(() => {
+    switch (attendanceStatus) {
+      case "not_yet":
+        setAttendanceTextDisplay("Chưa bắt đầu");
+        break;
+      case "present":
+        setAttendanceTextDisplay("Có mặt");
+        break;
+      case "absent":
+        setAttendanceTextDisplay("Vắng mặt");
+        break;
+      default:
+        setAttendanceTextDisplay("Chưa bắt đầu");
+        break;
+    }
+  }, [attendanceStatus]);
+
+  return (
+    <Menu>
+      <MenuButton
+        ml="2%"
+        bgColor="orange.400"
+        as={Button}
+        rightIcon={<ChevronDownIcon />}
+      >
+        {attendanceTextDisplay ? attendanceTextDisplay : "Loading..."}
+      </MenuButton>
+      <MenuList>
+        <MenuItem
+          onClick={() => {
+            handleAttendance("not_yet");
+            setAttendanceTextDisplay("Chưa bắt đầu");
+          }}
+        >
+          Chưa bắt đầu
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleAttendance("present");
+            setAttendanceTextDisplay("Có mặt");
+          }}
+        >
+          Có mặt
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleAttendance("absent");
+            setAttendanceTextDisplay("Vắng mặt");
+          }}
+        >
+          Vắng mặt
+        </MenuItem>
+      </MenuList>
+    </Menu>
+  );
+};
+
 /*
   Prime React 
 */
@@ -88,7 +206,7 @@ function DetailExamRoomComponent() {
       }
     };
     fetchDataDetailExamRoomByClassRoomID();
-  }, [flag]);
+  }, [loadForm]);
   // Chakra color mode
   const textColor = useColorModeValue("gray.700", "white");
   const borderColor = useColorModeValue("gray.200", "gray.600");
@@ -107,29 +225,55 @@ function DetailExamRoomComponent() {
   });
   const initialRef = React.useRef(null);
   const finalRef = React.useRef(null);
-  const handleSubmit = (e) => {
-    console.log(dataTemp?.examSlotID);
-    console.log(dataTemp?.examRoomID);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formData = new FormData(e.target);
     formData.append("examSlotID", dataTemp?.examSlotID);
     formData.append("examRoomID", dataTemp?.examRoomID);
-    console.log(formData);
-    fetch(`${URL}/exam-room/import-excel`, {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setResponseMessage(data.message);
-        setLoadForm(!loadForm);
-        setFlag(!flag);
-        onClose();
-      })
-      .catch((error) => {
-        console.error("Error:", error);
+    try {
+      const response = await fetch(`${URL}/exam-room/import-excel`, {
+        method: "POST",
+        body: formData,
       });
+
+      if (response.ok) {
+        // Handle success, e.g., show a success message
+        toast({
+          status: "success",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Phòng thi",
+          description: "Bạn đã thêm sinh viên thành công",
+        });
+      } else {
+        // Handle error, e.g., show an error message
+        console.error(response);
+        toast({
+          status: "error",
+          position: "top",
+          duration: "5000",
+          isClosable: true,
+          title: "Phòng thi",
+          description: "Thêm sinh viên không thành công",
+        });
+      }
+    } catch (error) {
+      // Handle network or other errors
+      console.error("ERROR: ", response);
+      toast({
+        status: "error",
+        position: "top",
+        duration: "5000",
+        isClosable: true,
+        title: "Phòng thi",
+        description: "Thêm sinh viên không thành công",
+      });
+    }
   };
+
   return (
     <Flex direction="column" pt={{ base: "120px", md: "75px" }}>
       <>
@@ -153,7 +297,7 @@ function DetailExamRoomComponent() {
                 <div class="p-3 border-round-sm bg-secondary font-bold">
                   <Text color={textColor} fontWeight="bold">
                     Ca Thi {"  "}{" "}
-                    <Chip label={data && data[0][0]?.examRoomID} />
+                    <Chip label={data && data[0][0]?.examSlotID} />
                   </Text>
                 </div>
               </div>
@@ -178,13 +322,7 @@ function DetailExamRoomComponent() {
                       Export Thông tin phòng thi
                     </a>
                   </Button>
-                  {/* <a
-                    href={`${URL}/examRoom/download/${classExamRoomId.id}`}
-                    width="15rem"
-                    bgColor="orange.400"
-                  >
-                    Export Thông tin phòng thi
-                  </a> */}
+                  {data && <AttendanceComponent data={data[0][0]} />}
                 </div>
               </div>
             </div>
@@ -204,42 +342,26 @@ function DetailExamRoomComponent() {
                   <Chip
                     label={
                       data &&
-                      String(
-                        new Date(data[0][0].startTime).getHours() - 7
-                      ).padStart(2, "0") +
+                      new Date(data[0][0]?.startTime).getHours() +
                         ":" +
-                        String(
-                          new Date(data[0][0].startTime).getMinutes()
-                        ).padStart(2, "0") +
+                        new Date(data[0][0]?.startTime).getMinutes() +
                         " - " +
-                        String(
-                          new Date(data[0][0].endTime).getHours() - 7
-                        ).padStart(2, "0") +
+                        new Date(data[0][0]?.endTime).getHours() +
                         ":" +
-                        String(
-                          new Date(data[0][0].endTime).getMinutes()
-                        ).padStart(2, "0") +
-                        " - " +
-                        new Date(data[0][0].startTime).getDate() +
+                        new Date(data[0][0]?.endTime).getMinutes() +
+                        " " +
+                        (new Date(data[0][0]?.startTime).getDate() + 1) +
                         "/" +
-                        (new Date(data[0][0].startTime).getMonth() + 1) +
+                        (new Date(data[0][0]?.startTime).getMonth() + 1) +
                         "/" +
-                        new Date(data[0][0].startTime).getFullYear()
+                        new Date(data[0][0]?.startTime).getFullYear()
                     }
                   />
                 </div>
               </div>
               <div class="col">
                 <div class="flex p-3 border-round-sm bg-secondary font-bold ">
-                  {/* <ExcelModal
-                    examSlotID={data && data[0][0]?.examSlotID}
-                    examRoomID={data && data[0][0]?.examRoomID}
-                  /> */}
-                  <StudentModal
-                    examSlotID={data && data[0][0]?.examSlotID}
-                    examRoomID={data && data[0][0]?.examRoomID}
-                  />
-                  {/* <Button
+                  <Button
                     width="15rem"
                     onClick={() => {
                       openFirstDrawer();
@@ -252,16 +374,16 @@ function DetailExamRoomComponent() {
                     bgColor="orange.400"
                     as={Button}
                   >
-                    Thêm sinh sinh (Excel)
-                  </Button> */}
-                  {/* <Button
+                    Thêm sinh viên (Excel)
+                  </Button>
+                  <Button
                     onClick={() => {}}
                     ml="2%"
                     bgColor="orange.400"
                     as={Button}
                   >
                     Thêm thủ công
-                  </Button> */}
+                  </Button>
                 </div>
               </div>
             </div>
@@ -432,7 +554,7 @@ function DetailExamRoomComponent() {
           </CardBody>
         </Card>
       </>
-      {/* <Modal
+      <Modal
         initialFocusRef={initialRef}
         finalFocusRef={finalRef}
         isOpen={isFirstDrawerOpen}
@@ -468,7 +590,7 @@ function DetailExamRoomComponent() {
             </ModalBody>
           </ModalContent>
         </form>
-      </Modal> */}
+      </Modal>
     </Flex>
   );
 }

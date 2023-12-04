@@ -39,6 +39,7 @@ import { Paginator } from "primereact/paginator";
 import Card from "components/Card/Card.js";
 import CardBody from "components/Card/CardBody.js";
 import CardHeader from "components/Card/CardHeader.js";
+import UpdateExamSlotDrawer from "./updateExamSlotDrawer.js";
 // You should also import some data for the table
 import { useHistory } from "react-router-dom";
 // Import useContext value
@@ -54,7 +55,6 @@ import { useClassRoom } from "../../components/share/ClassRoomContext";
 import { addMinutes, format } from "date-fns";
 
 function ListExamSchedulerComponent() {
-  const [loadForm, setLoadForm] = useState(false);
   const [data, setData] = useState();
   const [visible, setVisible] = useState(false);
   const [products, setProducts] = useState([]);
@@ -64,6 +64,8 @@ function ListExamSchedulerComponent() {
   const [isFirstDrawerOpen, setIsFirstDrawerOpen] = useState(false);
   const [isSecondDrawerOpen, setIsSecondDrawerOpen] = useState(false);
   const [isThirdDrawerOpen, setIsThirdDrawerOpen] = useState(false);
+  const [isFourthDrawerOpen, setIsFourthDrawerOpen] = useState(false);
+
   useEffect(() => {
     if (!localStorage.getItem("isLogin")) {
       toast({
@@ -115,6 +117,14 @@ function ListExamSchedulerComponent() {
     setIsThirdDrawerOpen(false);
   };
 
+  const openFourthDrawer = () => {
+    setIsFourthDrawerOpen(true);
+  };
+
+  const closeFourthDrawer = () => {
+    setIsFourthDrawerOpen(false);
+  };
+
   // Bật/Tắt đổi giám thị
   const [visibleUpdateExaminer, setVisibleUpdateExamine] = useState(false);
 
@@ -142,18 +152,6 @@ function ListExamSchedulerComponent() {
     examSlotID: "",
     examinerID: "",
     examRoomID: "",
-  });
-  const [dataExamSlotId, setDataExamSlotId] = useState(null);
-  const [dataExamSlot, setDataExamSlot] = useState({
-    examSlotID: "",
-    examBatchID: 1,
-    startTime: "2023-10-12T10:30:00.000Z",
-    endTime: "2023-10-12T11:30:00.000Z",
-    examBatchCode: "PE",
-    quantity: 5,
-    location: "FPTU",
-    status: false,
-    name: "Block 3",
   });
   const [dataBackupListExaminer, setDataBackupListExaminer] = useState([]);
   /*
@@ -254,9 +252,12 @@ function ListExamSchedulerComponent() {
       });
     }
   };
+
+  // Call api lấy thông tin ExamSlot (ca thi)
   function getInfoByExamSlot(id) {
     const fetchData = async (id) => {
       try {
+        getInfoByExamSlot;
         const response = await axios.get(`${URL}/examSlot/info/${id}`, {
           withCredentials: true,
         });
@@ -505,7 +506,7 @@ function ListExamSchedulerComponent() {
                   Thời gian
                 </Th>
                 <Th borderColor={borderColor} color="gray.400">
-                  Số lượng giám thị
+                  Số lượng giám thị tối đa
                 </Th>
 
                 <Th borderColor={borderColor} color="gray.400">
@@ -677,6 +678,9 @@ function ListExamSchedulerComponent() {
                             >
                               Xóa ca thi
                             </Button>
+                            <div onClick={(e) => e.stopPropagation()}>
+                              <UpdateExamSlotDrawer examSlotID={i?.examSlotID}/>
+                            </div>
                           </ButtonGroup>
                         </Td>
                       </Tr>
@@ -754,8 +758,8 @@ function ListExamSchedulerComponent() {
                   onChange={handleInputChange}
                 >
                   <option value="PE">PE</option>
-                  <option value="PE">FE</option>
-                  <option value="PE">RETAKE</option>
+                  <option value="FE">FE</option>
+                  <option value="RE">RETAKE</option>
                 </Select>
                 {/* <Input
                   type="text"
